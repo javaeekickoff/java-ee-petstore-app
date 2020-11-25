@@ -23,9 +23,6 @@ public class ProductService extends AbstractService<Product> implements Serializ
     // = Constructors =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public ProductService() {

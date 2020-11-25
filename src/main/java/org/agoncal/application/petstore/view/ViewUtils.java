@@ -16,7 +16,6 @@ import javax.persistence.Id;
 public final class ViewUtils {
 
     public static <T> List<T> asList(Collection<T> collection) {
-
         if (collection == null) {
             return null;
         }
@@ -25,7 +24,6 @@ public final class ViewUtils {
     }
 
     public static String display(Object object) {
-
         if (object == null) {
             return null;
         }
@@ -63,7 +61,6 @@ public final class ViewUtils {
     }
 
     private ViewUtils() {
-
         // Can never be called
     }
 }

@@ -1,9 +1,10 @@
 package org.agoncal.application.petstore.view;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import org.agoncal.application.petstore.util.Loggable;
@@ -33,7 +34,7 @@ public class DebugBean extends AbstractBean {
     }
 
     public String getWorkingDirectory() {
-        return new java.io.File(".").getAbsolutePath();
+        return new File(".").getAbsolutePath();
     }
 
     public String getTotalMemory() {

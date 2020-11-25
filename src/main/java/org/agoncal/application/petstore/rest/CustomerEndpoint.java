@@ -1,5 +1,12 @@
 package org.agoncal.application.petstore.rest;
 
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
+import static javax.ws.rs.core.Response.Status.CONFLICT;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.UriBuilder.fromResource;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,8 +25,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 
 import org.agoncal.application.petstore.model.Customer;
 import org.agoncal.application.petstore.util.Loggable;
@@ -42,7 +47,7 @@ public class CustomerEndpoint {
     // ======================================
 
     @PersistenceContext(unitName = "applicationPetstorePU")
-    private EntityManager em;
+    private EntityManager entityManager;
 
     // ======================================
     // = Business methods =
@@ -52,20 +57,20 @@ public class CustomerEndpoint {
     @Consumes({ "application/xml", "application/json" })
     @ApiOperation("Creates a customer")
     public Response create(Customer entity) {
-        em.persist(entity);
-        return Response.created(UriBuilder.fromResource(CustomerEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
+        entityManager.persist(entity);
+        return Response.created(fromResource(CustomerEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
     }
 
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
     @ApiOperation("Deletes a customer by id")
     public Response deleteById(@PathParam("id") Long id) {
-        Customer entity = em.find(Customer.class, id);
+        Customer entity = entityManager.find(Customer.class, id);
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return status(NOT_FOUND).build();
         }
-        em.remove(entity);
-        return Response.noContent().build();
+        entityManager.remove(entity);
+        return noContent().build();
     }
 
     @GET
@@ -73,9 +78,10 @@ public class CustomerEndpoint {
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Finds a customer by it identifier")
     public Response findById(@PathParam("id") Long id) {
-        TypedQuery<Customer> findByIdQuery = em
+        TypedQuery<Customer> findByIdQuery = entityManager
                 .createQuery("SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.homeAddress.country WHERE c.id = :entityId ORDER BY c.id", Customer.class);
         findByIdQuery.setParameter("entityId", id);
+
         Customer entity;
         try {
             entity = findByIdQuery.getSingleResult();
@@ -83,16 +89,17 @@ public class CustomerEndpoint {
             entity = null;
         }
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return status(NOT_FOUND).build();
         }
-        return Response.ok(entity).build();
+
+        return ok(entity).build();
     }
 
     @GET
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Lists all the customers")
     public List<Customer> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult) {
-        TypedQuery<Customer> findAllQuery = em.createQuery("SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.homeAddress.country ORDER BY c.id",
+        TypedQuery<Customer> findAllQuery = entityManager.createQuery("SELECT DISTINCT c FROM Customer c LEFT JOIN FETCH c.homeAddress.country ORDER BY c.id",
                 Customer.class);
         if (startPosition != null) {
             findAllQuery.setFirstResult(startPosition);
@@ -100,8 +107,8 @@ public class CustomerEndpoint {
         if (maxResult != null) {
             findAllQuery.setMaxResults(maxResult);
         }
-        final List<Customer> results = findAllQuery.getResultList();
-        return results;
+
+        return findAllQuery.getResultList();
     }
 
     @PUT
@@ -110,11 +117,11 @@ public class CustomerEndpoint {
     @ApiOperation("Updates a customer")
     public Response update(Customer entity) {
         try {
-            entity = em.merge(entity);
+            entity = entityManager.merge(entity);
         } catch (OptimisticLockException e) {
-            return Response.status(Response.Status.CONFLICT).entity(e.getEntity()).build();
+            return status(CONFLICT).entity(e.getEntity()).build();
         }
 
-        return Response.noContent().build();
+        return noContent().build();
     }
 }

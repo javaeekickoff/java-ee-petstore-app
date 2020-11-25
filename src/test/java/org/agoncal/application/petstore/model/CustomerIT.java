@@ -1,5 +1,10 @@
 package org.agoncal.application.petstore.model;
 
+import static org.junit.Assert.assertEquals;
+
+import javax.inject.Inject;
+import javax.validation.Validator;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -8,11 +13,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
-import javax.validation.Validator;
-
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author Antonio Goncalves
  */
@@ -20,25 +20,23 @@ import static org.junit.Assert.assertEquals;
 public class CustomerIT {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
     @Inject
     private Validator validator;
 
     // ======================================
-    // =          Lifecycle Methods         =
+    // = Lifecycle Methods =
     // ======================================
 
     @Deployment
     public static JavaArchive jar() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(Category.class, Address.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(JavaArchive.class).addClasses(Category.class, Address.class).addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     // ======================================
-    // =              Methods               =
+    // = Methods =
     // ======================================
 
     @Test

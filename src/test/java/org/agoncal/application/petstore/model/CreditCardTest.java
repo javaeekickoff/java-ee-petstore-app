@@ -1,8 +1,9 @@
 package org.agoncal.application.petstore.model;
 
+import org.junit.Test;
+
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Test;
 
 /**
  * @author Antonio Goncalves
@@ -10,7 +11,7 @@ import org.junit.Test;
 public class CreditCardTest {
 
     // ======================================
-    // =              Methods               =
+    // = Methods =
     // ======================================
 
     @Test

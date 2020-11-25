@@ -1,5 +1,7 @@
 package org.agoncal.application.petstore.view;
 
+import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -27,12 +29,12 @@ public class ExceptionInterceptor implements Serializable {
     private Logger log;
 
     @AroundInvoke
-    public Object catchException(InvocationContext ic) throws Exception {
+    public Object catchException(InvocationContext invocationContext) throws Exception {
         try {
-            return ic.proceed();
+            return invocationContext.proceed();
         } catch (Exception e) {
             addErrorMessage(e.getMessage());
-            log.severe("/!\\ " + ic.getTarget().getClass().getName() + " - " + ic.getMethod().getName() + " - " + e.getMessage());
+            log.severe("/!\\ " + invocationContext.getTarget().getClass().getName() + " - " + invocationContext.getMethod().getName() + " - " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -41,6 +43,6 @@ public class ExceptionInterceptor implements Serializable {
     // TODO to refactor with Controller methods
     protected void addErrorMessage(String message) {
         FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+        context.addMessage(null, new FacesMessage(SEVERITY_ERROR, message, null));
     }
 }

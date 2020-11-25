@@ -22,9 +22,6 @@ public class CategoryService extends AbstractService<Category> implements Serial
     // = Constructors =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public CategoryService() {

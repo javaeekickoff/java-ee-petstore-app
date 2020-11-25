@@ -23,9 +23,6 @@ public class OrderLineService extends AbstractService<OrderLine> implements Seri
     // = Constructors =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public OrderLineService() {

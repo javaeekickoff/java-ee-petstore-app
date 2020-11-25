@@ -41,9 +41,6 @@ public class PurchaseOrderService extends AbstractService<PurchaseOrder> impleme
     // = Public Methods =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public PurchaseOrder createOrder(@NotNull Customer customer, @NotNull CreditCard creditCard, final List<ShoppingCartItem> cartItems) {
@@ -99,18 +96,22 @@ public class PurchaseOrderService extends AbstractService<PurchaseOrder> impleme
         if (street1 != null && !"".equals(street1)) {
             predicatesList.add(builder.like(builder.lower(root.<String>get("street1")), '%' + street1.toLowerCase() + '%'));
         }
+
         String street2 = example.getCustomer().getHomeAddress().getStreet2();
         if (street2 != null && !"".equals(street2)) {
             predicatesList.add(builder.like(builder.lower(root.<String>get("street2")), '%' + street2.toLowerCase() + '%'));
         }
+
         String city = example.getCustomer().getHomeAddress().getCity();
         if (city != null && !"".equals(city)) {
             predicatesList.add(builder.like(builder.lower(root.<String>get("city")), '%' + city.toLowerCase() + '%'));
         }
+
         String state = example.getCustomer().getHomeAddress().getState();
         if (state != null && !"".equals(state)) {
             predicatesList.add(builder.like(builder.lower(root.<String>get("state")), '%' + state.toLowerCase() + '%'));
         }
+
         String zipcode = example.getCustomer().getHomeAddress().getZipcode();
         if (zipcode != null && !"".equals(zipcode)) {
             predicatesList.add(builder.like(builder.lower(root.<String>get("zipcode")), '%' + zipcode.toLowerCase() + '%'));

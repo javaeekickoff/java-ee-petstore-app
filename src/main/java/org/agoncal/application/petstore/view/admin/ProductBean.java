@@ -24,312 +24,256 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.agoncal.application.petstore.model.Product;
 import org.agoncal.application.petstore.model.Category;
+import org.agoncal.application.petstore.model.Product;
 import org.agoncal.application.petstore.util.Loggable;
 
 /**
  * Backing bean for Product entities.
  * <p/>
- * This class provides CRUD functionality for all Product entities. It focuses
- * purely on Java EE 6 standards (e.g. <tt>&#64;ConversationScoped</tt> for
- * state management, <tt>PersistenceContext</tt> for persistence,
- * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or
- * custom base class.
+ * This class provides CRUD functionality for all Product entities. It focuses purely on Java EE 6 standards (e.g.
+ * <tt>&#64;ConversationScoped</tt> for state management, <tt>PersistenceContext</tt> for persistence,
+ * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or custom base class.
  */
 
 @Named
 @Stateful
 @ConversationScoped
 @Loggable
-public class ProductBean implements Serializable
-{
+public class ProductBean implements Serializable {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /*
-    * Support creating and retrieving Product entities
-    */
+    /*
+     * Support creating and retrieving Product entities
+     */
 
-   private Long id;
+    private Long id;
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public Long getId() {
+        return this.id;
+    }
 
-   public void setId(Long id)
-   {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   private Product product;
+    private Product product;
 
-   public Product getProduct()
-   {
-      return this.product;
-   }
+    public Product getProduct() {
+        return this.product;
+    }
 
-   public void setProduct(Product product)
-   {
-      this.product = product;
-   }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-   @Inject
-   private Conversation conversation;
+    @Inject
+    private Conversation conversation;
 
-   @PersistenceContext(unitName = "applicationPetstorePU", type = PersistenceContextType.EXTENDED)
-   private EntityManager entityManager;
+    @PersistenceContext(unitName = "applicationPetstorePU", type = PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
 
-   public String create()
-   {
+    public String create() {
 
-      this.conversation.begin();
-      this.conversation.setTimeout(1800000L);
-      return "create?faces-redirect=true";
-   }
+        this.conversation.begin();
+        this.conversation.setTimeout(1800000L);
+        return "create?faces-redirect=true";
+    }
 
-   public void retrieve()
-   {
+    public void retrieve() {
 
-      if (FacesContext.getCurrentInstance().isPostback())
-      {
-         return;
-      }
+        if (FacesContext.getCurrentInstance().isPostback()) {
+            return;
+        }
 
-      if (this.conversation.isTransient())
-      {
-         this.conversation.begin();
-         this.conversation.setTimeout(1800000L);
-      }
+        if (this.conversation.isTransient()) {
+            this.conversation.begin();
+            this.conversation.setTimeout(1800000L);
+        }
 
-      if (this.id == null)
-      {
-         this.product = this.example;
-      }
-      else
-      {
-         this.product = findById(getId());
-      }
-   }
+        if (this.id == null) {
+            this.product = this.example;
+        } else {
+            this.product = findById(getId());
+        }
+    }
 
-   public Product findById(Long id)
-   {
+    public Product findById(Long id) {
 
-      return this.entityManager.find(Product.class, id);
-   }
+        return this.entityManager.find(Product.class, id);
+    }
 
-   /*
-    * Support updating and deleting Product entities
-    */
+    /*
+     * Support updating and deleting Product entities
+     */
 
-   public String update()
-   {
-      this.conversation.end();
+    public String update() {
+        this.conversation.end();
 
-      try
-      {
-         if (this.id == null)
-         {
-            this.entityManager.persist(this.product);
+        try {
+            if (this.id == null) {
+                this.entityManager.persist(this.product);
+                return "search?faces-redirect=true";
+            } else {
+                this.entityManager.merge(this.product);
+                return "view?faces-redirect=true&id=" + this.product.getId();
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+            return null;
+        }
+    }
+
+    public String delete() {
+        this.conversation.end();
+
+        try {
+            Product deletableEntity = findById(getId());
+
+            this.entityManager.remove(deletableEntity);
+            this.entityManager.flush();
             return "search?faces-redirect=true";
-         }
-         else
-         {
-            this.entityManager.merge(this.product);
-            return "view?faces-redirect=true&id=" + this.product.getId();
-         }
-      }
-      catch (Exception e)
-      {
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
-         return null;
-      }
-   }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+            return null;
+        }
+    }
 
-   public String delete()
-   {
-      this.conversation.end();
+    /*
+     * Support searching Product entities with pagination
+     */
 
-      try
-      {
-         Product deletableEntity = findById(getId());
+    private int page;
+    private long count;
+    private List<Product> pageItems;
 
-         this.entityManager.remove(deletableEntity);
-         this.entityManager.flush();
-         return "search?faces-redirect=true";
-      }
-      catch (Exception e)
-      {
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
-         return null;
-      }
-   }
+    private Product example = new Product();
 
-   /*
-    * Support searching Product entities with pagination
-    */
+    public int getPage() {
+        return this.page;
+    }
 
-   private int page;
-   private long count;
-   private List<Product> pageItems;
+    public void setPage(int page) {
+        this.page = page;
+    }
 
-   private Product example = new Product();
+    public int getPageSize() {
+        return 10;
+    }
 
-   public int getPage()
-   {
-      return this.page;
-   }
+    public Product getExample() {
+        return this.example;
+    }
 
-   public void setPage(int page)
-   {
-      this.page = page;
-   }
+    public void setExample(Product example) {
+        this.example = example;
+    }
 
-   public int getPageSize()
-   {
-      return 10;
-   }
+    public String search() {
+        this.page = 0;
+        return null;
+    }
 
-   public Product getExample()
-   {
-      return this.example;
-   }
+    public void paginate() {
 
-   public void setExample(Product example)
-   {
-      this.example = example;
-   }
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
 
-   public String search()
-   {
-      this.page = 0;
-      return null;
-   }
+        // Populate this.count
 
-   public void paginate()
-   {
+        CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
+        Root<Product> root = countCriteria.from(Product.class);
+        countCriteria = countCriteria.select(builder.count(root)).where(getSearchPredicates(root));
+        this.count = this.entityManager.createQuery(countCriteria).getSingleResult();
 
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        // Populate this.pageItems
 
-      // Populate this.count
+        CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
+        root = criteria.from(Product.class);
+        TypedQuery<Product> query = this.entityManager.createQuery(criteria.select(root).where(getSearchPredicates(root)));
+        query.setFirstResult(this.page * getPageSize()).setMaxResults(getPageSize());
+        this.pageItems = query.getResultList();
+    }
 
-      CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
-      Root<Product> root = countCriteria.from(Product.class);
-      countCriteria = countCriteria.select(builder.count(root)).where(
-            getSearchPredicates(root));
-      this.count = this.entityManager.createQuery(countCriteria)
-            .getSingleResult();
+    private Predicate[] getSearchPredicates(Root<Product> root) {
 
-      // Populate this.pageItems
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        List<Predicate> predicatesList = new ArrayList<>();
 
-      CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
-      root = criteria.from(Product.class);
-      TypedQuery<Product> query = this.entityManager.createQuery(criteria
-            .select(root).where(getSearchPredicates(root)));
-      query.setFirstResult(this.page * getPageSize()).setMaxResults(
-            getPageSize());
-      this.pageItems = query.getResultList();
-   }
+        String name = this.example.getName();
+        if (name != null && !"".equals(name)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("name")), '%' + name.toLowerCase() + '%'));
+        }
+        String description = this.example.getDescription();
+        if (description != null && !"".equals(description)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("description")), '%' + description.toLowerCase() + '%'));
+        }
+        Category category = this.example.getCategory();
+        if (category != null) {
+            predicatesList.add(builder.equal(root.get("category"), category));
+        }
 
-   private Predicate[] getSearchPredicates(Root<Product> root)
-   {
+        return predicatesList.toArray(new Predicate[predicatesList.size()]);
+    }
 
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-      List<Predicate> predicatesList = new ArrayList<Predicate>();
+    public List<Product> getPageItems() {
+        return this.pageItems;
+    }
 
-      String name = this.example.getName();
-      if (name != null && !"".equals(name))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("name")), '%' + name.toLowerCase() + '%'));
-      }
-      String description = this.example.getDescription();
-      if (description != null && !"".equals(description))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("description")), '%' + description.toLowerCase() + '%'));
-      }
-      Category category = this.example.getCategory();
-      if (category != null)
-      {
-         predicatesList.add(builder.equal(root.get("category"), category));
-      }
+    public long getCount() {
+        return this.count;
+    }
 
-      return predicatesList.toArray(new Predicate[predicatesList.size()]);
-   }
+    /*
+     * Support listing and POSTing back Product entities (e.g. from inside an HtmlSelectOneMenu)
+     */
 
-   public List<Product> getPageItems()
-   {
-      return this.pageItems;
-   }
+    public List<Product> getAll() {
 
-   public long getCount()
-   {
-      return this.count;
-   }
+        CriteriaQuery<Product> criteria = this.entityManager.getCriteriaBuilder().createQuery(Product.class);
+        return this.entityManager.createQuery(criteria.select(criteria.from(Product.class))).getResultList();
+    }
 
-   /*
-    * Support listing and POSTing back Product entities (e.g. from inside an
-    * HtmlSelectOneMenu)
-    */
+    @Resource
+    private SessionContext sessionContext;
 
-   public List<Product> getAll()
-   {
+    public Converter getConverter() {
 
-      CriteriaQuery<Product> criteria = this.entityManager
-            .getCriteriaBuilder().createQuery(Product.class);
-      return this.entityManager.createQuery(
-            criteria.select(criteria.from(Product.class))).getResultList();
-   }
+        final ProductBean ejbProxy = this.sessionContext.getBusinessObject(ProductBean.class);
 
-   @Resource
-   private SessionContext sessionContext;
+        return new Converter() {
 
-   public Converter getConverter()
-   {
+            @Override
+            public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
-      final ProductBean ejbProxy = this.sessionContext.getBusinessObject(ProductBean.class);
-
-      return new Converter()
-      {
-
-         @Override
-         public Object getAsObject(FacesContext context,
-               UIComponent component, String value)
-         {
-
-            return ejbProxy.findById(Long.valueOf(value));
-         }
-
-         @Override
-         public String getAsString(FacesContext context,
-               UIComponent component, Object value)
-         {
-
-            if (value == null)
-            {
-               return "";
+                return ejbProxy.findById(Long.valueOf(value));
             }
 
-            return String.valueOf(((Product) value).getId());
-         }
-      };
-   }
+            @Override
+            public String getAsString(FacesContext context, UIComponent component, Object value) {
 
-   /*
-    * Support adding children to bidirectional, one-to-many tables
-    */
+                if (value == null) {
+                    return "";
+                }
 
-   private Product add = new Product();
+                return String.valueOf(((Product) value).getId());
+            }
+        };
+    }
 
-   public Product getAdd()
-   {
-      return this.add;
-   }
+    /*
+     * Support adding children to bidirectional, one-to-many tables
+     */
 
-   public Product getAdded()
-   {
-      Product added = this.add;
-      this.add = new Product();
-      return added;
-   }
+    private Product add = new Product();
+
+    public Product getAdd() {
+        return this.add;
+    }
+
+    public Product getAdded() {
+        Product added = this.add;
+        this.add = new Product();
+        return added;
+    }
 }

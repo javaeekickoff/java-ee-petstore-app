@@ -19,10 +19,8 @@ import org.agoncal.application.petstore.util.Loggable;
 @Loggable
 public class LocaleBean implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+
     @Produces
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 

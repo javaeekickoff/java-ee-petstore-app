@@ -20,9 +20,6 @@ public class CreditCard implements Serializable {
     // = Attributes =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     @Column(length = 30, name = "credit_card_number", nullable = false)

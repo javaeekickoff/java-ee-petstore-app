@@ -9,6 +9,7 @@ public class NumberProducer {
     @Vat
     @Named
     private Float vatRate;
+
     @Produces
     @Discount
     @Named

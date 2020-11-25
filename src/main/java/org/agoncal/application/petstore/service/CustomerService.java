@@ -32,9 +32,6 @@ public class CustomerService extends AbstractService<Customer> implements Serial
     // = Constructors =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public CustomerService() {

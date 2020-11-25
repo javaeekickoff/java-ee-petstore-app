@@ -30,315 +30,257 @@ import org.agoncal.application.petstore.util.Loggable;
 /**
  * Backing bean for PurchaseOrder entities.
  * <p/>
- * This class provides CRUD functionality for all PurchaseOrder entities. It focuses
- * purely on Java EE 6 standards (e.g. <tt>&#64;ConversationScoped</tt> for
- * state management, <tt>PersistenceContext</tt> for persistence,
- * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or
- * custom base class.
+ * This class provides CRUD functionality for all PurchaseOrder entities. It focuses purely on Java EE 6 standards (e.g.
+ * <tt>&#64;ConversationScoped</tt> for state management, <tt>PersistenceContext</tt> for persistence,
+ * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or custom base class.
  */
 
 @Named
 @Stateful
 @ConversationScoped
 @Loggable
-public class PurchaseOrderBean implements Serializable
-{
+public class PurchaseOrderBean implements Serializable {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /*
-    * Support creating and retrieving PurchaseOrder entities
-    */
+    /*
+     * Support creating and retrieving PurchaseOrder entities
+     */
 
-   private Long id;
+    private Long id;
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public Long getId() {
+        return this.id;
+    }
 
-   public void setId(Long id)
-   {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   private PurchaseOrder purchaseOrder;
+    private PurchaseOrder purchaseOrder;
 
-   public PurchaseOrder getPurchaseOrder()
-   {
-      return this.purchaseOrder;
-   }
+    public PurchaseOrder getPurchaseOrder() {
+        return this.purchaseOrder;
+    }
 
-   public void setPurchaseOrder(PurchaseOrder purchaseOrder)
-   {
-      this.purchaseOrder = purchaseOrder;
-   }
+    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
 
-   @Inject
-   private Conversation conversation;
+    @Inject
+    private Conversation conversation;
 
-   @PersistenceContext(unitName = "applicationPetstorePU", type = PersistenceContextType.EXTENDED)
-   private EntityManager entityManager;
+    @PersistenceContext(unitName = "applicationPetstorePU", type = PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
 
-   public String create()
-   {
+    public String create() {
 
-      this.conversation.begin();
-      this.conversation.setTimeout(1800000L);
-      return "create?faces-redirect=true";
-   }
+        this.conversation.begin();
+        this.conversation.setTimeout(1800000L);
+        return "create?faces-redirect=true";
+    }
 
-   public void retrieve()
-   {
+    public void retrieve() {
 
-      if (FacesContext.getCurrentInstance().isPostback())
-      {
-         return;
-      }
+        if (FacesContext.getCurrentInstance().isPostback()) {
+            return;
+        }
 
-      if (this.conversation.isTransient())
-      {
-         this.conversation.begin();
-         this.conversation.setTimeout(1800000L);
-      }
+        if (this.conversation.isTransient()) {
+            this.conversation.begin();
+            this.conversation.setTimeout(1800000L);
+        }
 
-      if (this.id == null)
-      {
-         this.purchaseOrder = this.example;
-      }
-      else
-      {
-         this.purchaseOrder = findById(getId());
-      }
-   }
+        if (this.id == null) {
+            this.purchaseOrder = this.example;
+        } else {
+            this.purchaseOrder = findById(getId());
+        }
+    }
 
-   public PurchaseOrder findById(Long id)
-   {
+    public PurchaseOrder findById(Long id) {
 
-      return this.entityManager.find(PurchaseOrder.class, id);
-   }
+        return this.entityManager.find(PurchaseOrder.class, id);
+    }
 
-   /*
-    * Support updating and deleting PurchaseOrder entities
-    */
+    /*
+     * Support updating and deleting PurchaseOrder entities
+     */
 
-   public String update()
-   {
-      this.conversation.end();
+    public String update() {
+        this.conversation.end();
 
-      try
-      {
-         if (this.id == null)
-         {
-            this.entityManager.persist(this.purchaseOrder);
+        try {
+            if (this.id == null) {
+                this.entityManager.persist(this.purchaseOrder);
+                return "search?faces-redirect=true";
+            } else {
+                this.entityManager.merge(this.purchaseOrder);
+                return "view?faces-redirect=true&id=" + this.purchaseOrder.getId();
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+            return null;
+        }
+    }
+
+    public String delete() {
+        this.conversation.end();
+
+        try {
+            PurchaseOrder deletableEntity = findById(getId());
+
+            this.entityManager.remove(deletableEntity);
+            this.entityManager.flush();
             return "search?faces-redirect=true";
-         }
-         else
-         {
-            this.entityManager.merge(this.purchaseOrder);
-            return "view?faces-redirect=true&id=" + this.purchaseOrder.getId();
-         }
-      }
-      catch (Exception e)
-      {
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
-         return null;
-      }
-   }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+            return null;
+        }
+    }
 
-   public String delete()
-   {
-      this.conversation.end();
+    /*
+     * Support searching PurchaseOrder entities with pagination
+     */
 
-      try
-      {
-         PurchaseOrder deletableEntity = findById(getId());
+    private int page;
+    private long count;
+    private List<PurchaseOrder> pageItems;
 
-         this.entityManager.remove(deletableEntity);
-         this.entityManager.flush();
-         return "search?faces-redirect=true";
-      }
-      catch (Exception e)
-      {
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
-         return null;
-      }
-   }
+    private PurchaseOrder example = new PurchaseOrder();
 
-   /*
-    * Support searching PurchaseOrder entities with pagination
-    */
+    public int getPage() {
+        return this.page;
+    }
 
-   private int page;
-   private long count;
-   private List<PurchaseOrder> pageItems;
+    public void setPage(int page) {
+        this.page = page;
+    }
 
-   private PurchaseOrder example = new PurchaseOrder();
+    public int getPageSize() {
+        return 10;
+    }
 
-   public int getPage()
-   {
-      return this.page;
-   }
+    public PurchaseOrder getExample() {
+        return this.example;
+    }
 
-   public void setPage(int page)
-   {
-      this.page = page;
-   }
+    public void setExample(PurchaseOrder example) {
+        this.example = example;
+    }
 
-   public int getPageSize()
-   {
-      return 10;
-   }
+    public String search() {
+        this.page = 0;
+        return null;
+    }
 
-   public PurchaseOrder getExample()
-   {
-      return this.example;
-   }
+    public void paginate() {
 
-   public void setExample(PurchaseOrder example)
-   {
-      this.example = example;
-   }
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
 
-   public String search()
-   {
-      this.page = 0;
-      return null;
-   }
+        // Populate this.count
 
-   public void paginate()
-   {
+        CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
+        Root<PurchaseOrder> root = countCriteria.from(PurchaseOrder.class);
+        countCriteria = countCriteria.select(builder.count(root)).where(getSearchPredicates(root));
+        this.count = this.entityManager.createQuery(countCriteria).getSingleResult();
 
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        // Populate this.pageItems
 
-      // Populate this.count
+        CriteriaQuery<PurchaseOrder> criteria = builder.createQuery(PurchaseOrder.class);
+        root = criteria.from(PurchaseOrder.class);
+        TypedQuery<PurchaseOrder> query = this.entityManager.createQuery(criteria.select(root).where(getSearchPredicates(root)));
+        query.setFirstResult(this.page * getPageSize()).setMaxResults(getPageSize());
+        this.pageItems = query.getResultList();
+    }
 
-      CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
-      Root<PurchaseOrder> root = countCriteria.from(PurchaseOrder.class);
-      countCriteria = countCriteria.select(builder.count(root)).where(
-            getSearchPredicates(root));
-      this.count = this.entityManager.createQuery(countCriteria)
-            .getSingleResult();
+    private Predicate[] getSearchPredicates(Root<PurchaseOrder> root) {
 
-      // Populate this.pageItems
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        List<Predicate> predicatesList = new ArrayList<>();
 
-      CriteriaQuery<PurchaseOrder> criteria = builder.createQuery(PurchaseOrder.class);
-      root = criteria.from(PurchaseOrder.class);
-      TypedQuery<PurchaseOrder> query = this.entityManager.createQuery(criteria
-            .select(root).where(getSearchPredicates(root)));
-      query.setFirstResult(this.page * getPageSize()).setMaxResults(
-            getPageSize());
-      this.pageItems = query.getResultList();
-   }
+        String street1 = this.example.getDeliveryAddress().getStreet1();
+        if (street1 != null && !"".equals(street1)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("street1")), '%' + street1.toLowerCase() + '%'));
+        }
+        String street2 = this.example.getDeliveryAddress().getStreet2();
+        if (street2 != null && !"".equals(street2)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("street2")), '%' + street2.toLowerCase() + '%'));
+        }
+        String city = this.example.getDeliveryAddress().getCity();
+        if (city != null && !"".equals(city)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("city")), '%' + city.toLowerCase() + '%'));
+        }
+        String state = this.example.getDeliveryAddress().getState();
+        if (state != null && !"".equals(state)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("state")), '%' + state.toLowerCase() + '%'));
+        }
+        String zipcode = this.example.getDeliveryAddress().getZipcode();
+        if (zipcode != null && !"".equals(zipcode)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("zipcode")), '%' + zipcode.toLowerCase() + '%'));
+        }
 
-   private Predicate[] getSearchPredicates(Root<PurchaseOrder> root)
-   {
+        return predicatesList.toArray(new Predicate[predicatesList.size()]);
+    }
 
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-      List<Predicate> predicatesList = new ArrayList<Predicate>();
+    public List<PurchaseOrder> getPageItems() {
+        return this.pageItems;
+    }
 
-      String street1 = this.example.getDeliveryAddress().getStreet1();
-      if (street1 != null && !"".equals(street1))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("street1")), '%' + street1.toLowerCase() + '%'));
-      }
-      String street2 = this.example.getDeliveryAddress().getStreet2();
-      if (street2 != null && !"".equals(street2))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("street2")), '%' + street2.toLowerCase() + '%'));
-      }
-      String city = this.example.getDeliveryAddress().getCity();
-      if (city != null && !"".equals(city))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("city")), '%' + city.toLowerCase() + '%'));
-      }
-      String state = this.example.getDeliveryAddress().getState();
-      if (state != null && !"".equals(state))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("state")), '%' + state.toLowerCase() + '%'));
-      }
-      String zipcode = this.example.getDeliveryAddress().getZipcode();
-      if (zipcode != null && !"".equals(zipcode))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("zipcode")), '%' + zipcode.toLowerCase() + '%'));
-      }
+    public long getCount() {
+        return this.count;
+    }
 
-      return predicatesList.toArray(new Predicate[predicatesList.size()]);
-   }
+    /*
+     * Support listing and POSTing back PurchaseOrder entities (e.g. from inside an HtmlSelectOneMenu)
+     */
 
-   public List<PurchaseOrder> getPageItems()
-   {
-      return this.pageItems;
-   }
+    public List<PurchaseOrder> getAll() {
 
-   public long getCount()
-   {
-      return this.count;
-   }
+        CriteriaQuery<PurchaseOrder> criteria = this.entityManager.getCriteriaBuilder().createQuery(PurchaseOrder.class);
+        return this.entityManager.createQuery(criteria.select(criteria.from(PurchaseOrder.class))).getResultList();
+    }
 
-   /*
-    * Support listing and POSTing back PurchaseOrder entities (e.g. from inside an
-    * HtmlSelectOneMenu)
-    */
+    @Resource
+    private SessionContext sessionContext;
 
-   public List<PurchaseOrder> getAll()
-   {
+    public Converter getConverter() {
 
-      CriteriaQuery<PurchaseOrder> criteria = this.entityManager
-            .getCriteriaBuilder().createQuery(PurchaseOrder.class);
-      return this.entityManager.createQuery(
-            criteria.select(criteria.from(PurchaseOrder.class))).getResultList();
-   }
+        final PurchaseOrderBean ejbProxy = this.sessionContext.getBusinessObject(PurchaseOrderBean.class);
 
-   @Resource
-   private SessionContext sessionContext;
+        return new Converter() {
 
-   public Converter getConverter()
-   {
+            @Override
+            public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
-      final PurchaseOrderBean ejbProxy = this.sessionContext.getBusinessObject(PurchaseOrderBean.class);
-
-      return new Converter()
-      {
-
-         @Override
-         public Object getAsObject(FacesContext context,
-               UIComponent component, String value)
-         {
-
-            return ejbProxy.findById(Long.valueOf(value));
-         }
-
-         @Override
-         public String getAsString(FacesContext context,
-               UIComponent component, Object value)
-         {
-
-            if (value == null)
-            {
-               return "";
+                return ejbProxy.findById(Long.valueOf(value));
             }
 
-            return String.valueOf(((PurchaseOrder) value).getId());
-         }
-      };
-   }
+            @Override
+            public String getAsString(FacesContext context, UIComponent component, Object value) {
 
-   /*
-    * Support adding children to bidirectional, one-to-many tables
-    */
+                if (value == null) {
+                    return "";
+                }
 
-   private PurchaseOrder add = new PurchaseOrder();
+                return String.valueOf(((PurchaseOrder) value).getId());
+            }
+        };
+    }
 
-   public PurchaseOrder getAdd()
-   {
-      return this.add;
-   }
+    /*
+     * Support adding children to bidirectional, one-to-many tables
+     */
 
-   public PurchaseOrder getAdded()
-   {
-      PurchaseOrder added = this.add;
-      this.add = new PurchaseOrder();
-      return added;
-   }
+    private PurchaseOrder add = new PurchaseOrder();
+
+    public PurchaseOrder getAdd() {
+        return this.add;
+    }
+
+    public PurchaseOrder getAdded() {
+        PurchaseOrder added = this.add;
+        this.add = new PurchaseOrder();
+        return added;
+    }
 }

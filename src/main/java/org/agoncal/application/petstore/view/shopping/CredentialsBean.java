@@ -1,13 +1,12 @@
 package org.agoncal.application.petstore.view.shopping;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
+
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -15,15 +14,19 @@ import java.io.Serializable;
 public class CredentialsBean implements Serializable {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private String login;
     private String password;
     private String password2;
 
     // ======================================
-    // =         Getters & setters          =
+    // = Getters & setters =
     // ======================================
 
     public String getLogin() {

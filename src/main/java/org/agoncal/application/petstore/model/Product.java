@@ -1,14 +1,15 @@
 package org.agoncal.application.petstore.model;
 
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.GenerationType.AUTO;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,14 +37,13 @@ public class Product implements Serializable {
     // = Attributes =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
     @Version
     @Column(name = "version")
     private int version;
@@ -58,7 +58,7 @@ public class Product implements Serializable {
     @Size(max = 3000)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = "category_fk", nullable = false)
     @XmlTransient
     private Category category;

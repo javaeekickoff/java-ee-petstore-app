@@ -1,6 +1,20 @@
 package org.agoncal.application.petstore.view.shopping;
 
-import org.agoncal.application.petstore.model.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.agoncal.application.petstore.model.CreditCard;
+import org.agoncal.application.petstore.model.CreditCardType;
+import org.agoncal.application.petstore.model.Customer;
+import org.agoncal.application.petstore.model.Item;
+import org.agoncal.application.petstore.model.PurchaseOrder;
 import org.agoncal.application.petstore.service.CatalogService;
 import org.agoncal.application.petstore.service.PurchaseOrderService;
 import org.agoncal.application.petstore.util.Loggable;
@@ -8,19 +22,8 @@ import org.agoncal.application.petstore.view.AbstractBean;
 import org.agoncal.application.petstore.view.CatchException;
 import org.agoncal.application.petstore.view.LoggedIn;
 
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -30,9 +33,13 @@ import java.util.List;
 public class ShoppingCartBean extends AbstractBean implements Serializable {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     @Inject
     @LoggedIn
     private Instance<Customer> loggedInCustomer;
@@ -48,7 +55,7 @@ public class ShoppingCartBean extends AbstractBean implements Serializable {
     private PurchaseOrder order;
 
     // ======================================
-    // =              Public Methods        =
+    // = Public Methods =
     // ======================================
 
     public String addItemToCart() {
@@ -68,9 +75,10 @@ public class ShoppingCartBean extends AbstractBean implements Serializable {
                 itemFound = true;
             }
         }
-        if (!itemFound)
+        if (!itemFound) {
             // Otherwise it's added to the shopping cart
             cartItems.add(new ShoppingCartItem(item, 1));
+        }
 
         return "showcart.faces";
     }
@@ -116,29 +124,28 @@ public class ShoppingCartBean extends AbstractBean implements Serializable {
         return getCartItems() == null || getCartItems().size() == 0;
     }
 
-
     public Float getTotal() {
 
-        if (cartItems == null || cartItems.isEmpty())
+        if (cartItems == null || cartItems.isEmpty()) {
             return 0f;
+        }
 
         Float total = 0f;
 
         // Sum up the quantities
         for (ShoppingCartItem cartItem : cartItems) {
-            total += (cartItem.getSubTotal());
+            total += cartItem.getSubTotal();
         }
         return total;
     }
 
     // ======================================
-    // =         Getters & setters          =
+    // = Getters & setters =
     // ======================================
 
     public Customer getCustomer() {
         return loggedInCustomer.get();
     }
-
 
     public CreditCard getCreditCard() {
         return creditCard;

@@ -28,9 +28,7 @@ import org.agoncal.application.petstore.view.CatchException;
 import org.agoncal.application.petstore.view.LoggedIn;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -40,7 +38,7 @@ import org.agoncal.application.petstore.view.LoggedIn;
 public class AccountBean extends AbstractBean implements Serializable {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
     private static final long serialVersionUID = 1L;
@@ -66,9 +64,8 @@ public class AccountBean extends AbstractBean implements Serializable {
 
     private Customer newCustomer;
 
-
     // ======================================
-    // =              Public Methods        =
+    // = Public Methods =
     // ======================================
 
     public String doLogin() throws LoginException {
@@ -82,11 +79,9 @@ public class AccountBean extends AbstractBean implements Serializable {
             return null;
         }
 
-        AuthenticationStatus status = securityContext.authenticate((
-            HttpServletRequest) externalContext.getRequest(),
-            (HttpServletResponse) externalContext.getResponse(),
-            withParams()
-                            .credential(new UsernamePasswordCredential(credentials.getLogin(), credentials.getPassword())));
+        AuthenticationStatus status = securityContext.authenticate((HttpServletRequest) externalContext.getRequest(),
+                (HttpServletResponse) externalContext.getResponse(),
+                withParams().credential(new UsernamePasswordCredential(credentials.getLogin(), credentials.getPassword())));
 
         if (status == SEND_FAILURE) {
             addErrorMessage("FAIL");
@@ -126,12 +121,8 @@ public class AccountBean extends AbstractBean implements Serializable {
     public String doCreateCustomer() {
         customerService.createCustomer(newCustomer);
 
-        securityContext.authenticate((
-                HttpServletRequest) externalContext.getRequest(),
-                (HttpServletResponse) externalContext.getResponse(),
-                withParams()
-                                .credential(new UsernamePasswordCredential(newCustomer.getLogin(), newCustomer.getPassword())));
-
+        securityContext.authenticate((HttpServletRequest) externalContext.getRequest(), (HttpServletResponse) externalContext.getResponse(),
+                withParams().credential(new UsernamePasswordCredential(newCustomer.getLogin(), newCustomer.getPassword())));
 
         return "main.faces";
     }
@@ -166,10 +157,8 @@ public class AccountBean extends AbstractBean implements Serializable {
 
     public Customer getLoggedinCustomer() {
         if (loggedinCustomer == null) {
-            loggedinCustomer = securityContext
-                .getPrincipalsByType(SimpleCallerPrincipal.class).stream()
-                .map(SimpleCallerPrincipal::getCustomer)
-                .findAny().orElse(null);
+            loggedinCustomer = securityContext.getPrincipalsByType(SimpleCallerPrincipal.class).stream().map(SimpleCallerPrincipal::getCustomer).findAny()
+                    .orElse(null);
         }
 
         return loggedinCustomer;

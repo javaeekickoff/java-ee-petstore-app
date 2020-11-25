@@ -22,9 +22,6 @@ public class CountryService extends AbstractService<Country> implements Serializ
     // = Constructors =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public CountryService() {

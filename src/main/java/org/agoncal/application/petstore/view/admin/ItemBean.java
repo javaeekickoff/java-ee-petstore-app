@@ -31,310 +31,253 @@ import org.agoncal.application.petstore.util.Loggable;
 /**
  * Backing bean for Item entities.
  * <p/>
- * This class provides CRUD functionality for all Item entities. It focuses
- * purely on Java EE 6 standards (e.g. <tt>&#64;ConversationScoped</tt> for
- * state management, <tt>PersistenceContext</tt> for persistence,
- * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or
- * custom base class.
+ * This class provides CRUD functionality for all Item entities. It focuses purely on Java EE 6 standards (e.g.
+ * <tt>&#64;ConversationScoped</tt> for state management, <tt>PersistenceContext</tt> for persistence,
+ * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or custom base class.
  */
 
 @Named
 @Stateful
 @ConversationScoped
 @Loggable
-public class ItemBean implements Serializable
-{
+public class ItemBean implements Serializable {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   /*
-    * Support creating and retrieving Item entities
-    */
+    /*
+     * Support creating and retrieving Item entities
+     */
 
-   private Long id;
+    private Long id;
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public Long getId() {
+        return this.id;
+    }
 
-   public void setId(Long id)
-   {
-      this.id = id;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   private Item item;
+    private Item item;
 
-   public Item getItem()
-   {
-      return this.item;
-   }
+    public Item getItem() {
+        return this.item;
+    }
 
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
-   @Inject
-   private Conversation conversation;
+    @Inject
+    private Conversation conversation;
 
-   @PersistenceContext(unitName = "applicationPetstorePU", type = PersistenceContextType.EXTENDED)
-   private EntityManager entityManager;
+    @PersistenceContext(unitName = "applicationPetstorePU", type = PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
 
-   public String create()
-   {
+    public String create() {
 
-      this.conversation.begin();
-      this.conversation.setTimeout(1800000L);
-      return "create?faces-redirect=true";
-   }
+        this.conversation.begin();
+        this.conversation.setTimeout(1800000L);
+        return "create?faces-redirect=true";
+    }
 
-   public void retrieve()
-   {
+    public void retrieve() {
 
-      if (FacesContext.getCurrentInstance().isPostback())
-      {
-         return;
-      }
+        if (FacesContext.getCurrentInstance().isPostback()) {
+            return;
+        }
 
-      if (this.conversation.isTransient())
-      {
-         this.conversation.begin();
-         this.conversation.setTimeout(1800000L);
-      }
+        if (this.conversation.isTransient()) {
+            this.conversation.begin();
+            this.conversation.setTimeout(1800000L);
+        }
 
-      if (this.id == null)
-      {
-         this.item = this.example;
-      }
-      else
-      {
-         this.item = findById(getId());
-      }
-   }
+        if (this.id == null) {
+            this.item = this.example;
+        } else {
+            this.item = findById(getId());
+        }
+    }
 
-   public Item findById(Long id)
-   {
+    public Item findById(Long id) {
 
-      return this.entityManager.find(Item.class, id);
-   }
+        return this.entityManager.find(Item.class, id);
+    }
 
-   /*
-    * Support updating and deleting Item entities
-    */
+    /*
+     * Support updating and deleting Item entities
+     */
 
-   public String update()
-   {
-      this.conversation.end();
+    public String update() {
+        this.conversation.end();
 
-      try
-      {
-         if (this.id == null)
-         {
-            this.entityManager.persist(this.item);
+        try {
+            if (this.id == null) {
+                this.entityManager.persist(this.item);
+                return "search?faces-redirect=true";
+            } else {
+                this.entityManager.merge(this.item);
+                return "view?faces-redirect=true&id=" + this.item.getId();
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+            return null;
+        }
+    }
+
+    public String delete() {
+        this.conversation.end();
+
+        try {
+            Item deletableEntity = findById(getId());
+
+            this.entityManager.remove(deletableEntity);
+            this.entityManager.flush();
             return "search?faces-redirect=true";
-         }
-         else
-         {
-            this.entityManager.merge(this.item);
-            return "view?faces-redirect=true&id=" + this.item.getId();
-         }
-      }
-      catch (Exception e)
-      {
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
-         return null;
-      }
-   }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
+            return null;
+        }
+    }
 
-   public String delete()
-   {
-      this.conversation.end();
+    /*
+     * Support searching Item entities with pagination
+     */
 
-      try
-      {
-         Item deletableEntity = findById(getId());
+    private int page;
+    private long count;
+    private List<Item> pageItems;
 
-         this.entityManager.remove(deletableEntity);
-         this.entityManager.flush();
-         return "search?faces-redirect=true";
-      }
-      catch (Exception e)
-      {
-         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));
-         return null;
-      }
-   }
+    private Item example = new Item();
 
-   /*
-    * Support searching Item entities with pagination
-    */
+    public int getPage() {
+        return this.page;
+    }
 
-   private int page;
-   private long count;
-   private List<Item> pageItems;
+    public void setPage(int page) {
+        this.page = page;
+    }
 
-   private Item example = new Item();
+    public int getPageSize() {
+        return 10;
+    }
 
-   public int getPage()
-   {
-      return this.page;
-   }
+    public Item getExample() {
+        return this.example;
+    }
 
-   public void setPage(int page)
-   {
-      this.page = page;
-   }
+    public void setExample(Item example) {
+        this.example = example;
+    }
 
-   public int getPageSize()
-   {
-      return 10;
-   }
+    public String search() {
+        this.page = 0;
+        return null;
+    }
 
-   public Item getExample()
-   {
-      return this.example;
-   }
+    public void paginate() {
 
-   public void setExample(Item example)
-   {
-      this.example = example;
-   }
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
 
-   public String search()
-   {
-      this.page = 0;
-      return null;
-   }
+        // Populate this.count
 
-   public void paginate()
-   {
+        CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
+        Root<Item> root = countCriteria.from(Item.class);
+        countCriteria = countCriteria.select(builder.count(root)).where(getSearchPredicates(root));
+        this.count = this.entityManager.createQuery(countCriteria).getSingleResult();
 
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        // Populate this.pageItems
 
-      // Populate this.count
+        CriteriaQuery<Item> criteria = builder.createQuery(Item.class);
+        root = criteria.from(Item.class);
+        TypedQuery<Item> query = this.entityManager.createQuery(criteria.select(root).where(getSearchPredicates(root)));
+        query.setFirstResult(this.page * getPageSize()).setMaxResults(getPageSize());
+        this.pageItems = query.getResultList();
+    }
 
-      CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
-      Root<Item> root = countCriteria.from(Item.class);
-      countCriteria = countCriteria.select(builder.count(root)).where(
-            getSearchPredicates(root));
-      this.count = this.entityManager.createQuery(countCriteria)
-            .getSingleResult();
+    private Predicate[] getSearchPredicates(Root<Item> root) {
 
-      // Populate this.pageItems
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        List<Predicate> predicatesList = new ArrayList<>();
 
-      CriteriaQuery<Item> criteria = builder.createQuery(Item.class);
-      root = criteria.from(Item.class);
-      TypedQuery<Item> query = this.entityManager.createQuery(criteria
-            .select(root).where(getSearchPredicates(root)));
-      query.setFirstResult(this.page * getPageSize()).setMaxResults(
-            getPageSize());
-      this.pageItems = query.getResultList();
-   }
+        String name = this.example.getName();
+        if (name != null && !"".equals(name)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("name")), '%' + name.toLowerCase() + '%'));
+        }
+        String description = this.example.getDescription();
+        if (description != null && !"".equals(description)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("description")), '%' + description.toLowerCase() + '%'));
+        }
+        String imagePath = this.example.getImagePath();
+        if (imagePath != null && !"".equals(imagePath)) {
+            predicatesList.add(builder.like(builder.lower(root.<String>get("imagePath")), '%' + imagePath.toLowerCase() + '%'));
+        }
+        Product product = this.example.getProduct();
+        if (product != null) {
+            predicatesList.add(builder.equal(root.get("product"), product));
+        }
 
-   private Predicate[] getSearchPredicates(Root<Item> root)
-   {
+        return predicatesList.toArray(new Predicate[predicatesList.size()]);
+    }
 
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-      List<Predicate> predicatesList = new ArrayList<Predicate>();
+    public List<Item> getPageItems() {
+        return this.pageItems;
+    }
 
-      String name = this.example.getName();
-      if (name != null && !"".equals(name))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("name")), '%' + name.toLowerCase() + '%'));
-      }
-      String description = this.example.getDescription();
-      if (description != null && !"".equals(description))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("description")), '%' + description.toLowerCase() + '%'));
-      }
-      String imagePath = this.example.getImagePath();
-      if (imagePath != null && !"".equals(imagePath))
-      {
-         predicatesList.add(builder.like(builder.lower(root.<String> get("imagePath")), '%' + imagePath.toLowerCase() + '%'));
-      }
-      Product product = this.example.getProduct();
-      if (product != null)
-      {
-         predicatesList.add(builder.equal(root.get("product"), product));
-      }
+    public long getCount() {
+        return this.count;
+    }
 
-      return predicatesList.toArray(new Predicate[predicatesList.size()]);
-   }
+    /*
+     * Support listing and POSTing back Item entities (e.g. from inside an HtmlSelectOneMenu)
+     */
 
-   public List<Item> getPageItems()
-   {
-      return this.pageItems;
-   }
+    public List<Item> getAll() {
 
-   public long getCount()
-   {
-      return this.count;
-   }
+        CriteriaQuery<Item> criteria = this.entityManager.getCriteriaBuilder().createQuery(Item.class);
+        return this.entityManager.createQuery(criteria.select(criteria.from(Item.class))).getResultList();
+    }
 
-   /*
-    * Support listing and POSTing back Item entities (e.g. from inside an
-    * HtmlSelectOneMenu)
-    */
+    @Resource
+    private SessionContext sessionContext;
 
-   public List<Item> getAll()
-   {
+    public Converter getConverter() {
 
-      CriteriaQuery<Item> criteria = this.entityManager
-            .getCriteriaBuilder().createQuery(Item.class);
-      return this.entityManager.createQuery(
-            criteria.select(criteria.from(Item.class))).getResultList();
-   }
+        final ItemBean ejbProxy = this.sessionContext.getBusinessObject(ItemBean.class);
 
-   @Resource
-   private SessionContext sessionContext;
+        return new Converter() {
 
-   public Converter getConverter()
-   {
+            @Override
+            public Object getAsObject(FacesContext context, UIComponent component, String value) {
 
-      final ItemBean ejbProxy = this.sessionContext.getBusinessObject(ItemBean.class);
-
-      return new Converter()
-      {
-
-         @Override
-         public Object getAsObject(FacesContext context,
-               UIComponent component, String value)
-         {
-
-            return ejbProxy.findById(Long.valueOf(value));
-         }
-
-         @Override
-         public String getAsString(FacesContext context,
-               UIComponent component, Object value)
-         {
-
-            if (value == null)
-            {
-               return "";
+                return ejbProxy.findById(Long.valueOf(value));
             }
 
-            return String.valueOf(((Item) value).getId());
-         }
-      };
-   }
+            @Override
+            public String getAsString(FacesContext context, UIComponent component, Object value) {
 
-   /*
-    * Support adding children to bidirectional, one-to-many tables
-    */
+                if (value == null) {
+                    return "";
+                }
 
-   private Item add = new Item();
+                return String.valueOf(((Item) value).getId());
+            }
+        };
+    }
 
-   public Item getAdd()
-   {
-      return this.add;
-   }
+    /*
+     * Support adding children to bidirectional, one-to-many tables
+     */
 
-   public Item getAdded()
-   {
-      Item added = this.add;
-      this.add = new Item();
-      return added;
-   }
+    private Item add = new Item();
+
+    public Item getAdd() {
+        return this.add;
+    }
+
+    public Item getAdded() {
+        Item added = this.add;
+        this.add = new Item();
+        return added;
+    }
 }

@@ -23,9 +23,6 @@ public class ItemService extends AbstractService<Item> implements Serializable {
     // = Constructors =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public ItemService() {

@@ -16,5 +16,5 @@ public class DatabaseProducer {
 
     @Produces
     @PersistenceContext(unitName = "applicationPetstorePU")
-    private EntityManager em;
+    private EntityManager entityManager;
 }

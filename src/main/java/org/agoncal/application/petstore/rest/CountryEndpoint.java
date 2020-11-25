@@ -1,5 +1,10 @@
 package org.agoncal.application.petstore.rest;
 
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.Status.CONFLICT;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.UriBuilder.fromResource;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,8 +23,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 
 import org.agoncal.application.petstore.model.Country;
 import org.agoncal.application.petstore.util.Loggable;
@@ -42,7 +45,7 @@ public class CountryEndpoint {
     // ======================================
 
     @PersistenceContext(unitName = "applicationPetstorePU")
-    private EntityManager em;
+    private EntityManager entityManager;
 
     // ======================================
     // = Business methods =
@@ -52,20 +55,20 @@ public class CountryEndpoint {
     @Consumes({ "application/xml", "application/json" })
     @ApiOperation("Creates a country")
     public Response create(Country entity) {
-        em.persist(entity);
-        return Response.created(UriBuilder.fromResource(CountryEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
+        entityManager.persist(entity);
+        return Response.created(fromResource(CountryEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
     }
 
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
     @ApiOperation("Deletes a country given an id")
     public Response deleteById(@PathParam("id") Long id) {
-        Country entity = em.find(Country.class, id);
+        Country entity = entityManager.find(Country.class, id);
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(NOT_FOUND).build();
         }
-        em.remove(entity);
-        return Response.noContent().build();
+        entityManager.remove(entity);
+        return noContent().build();
     }
 
     @GET
@@ -73,7 +76,7 @@ public class CountryEndpoint {
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Retrieves a country by its id")
     public Response findById(@PathParam("id") Long id) {
-        TypedQuery<Country> findByIdQuery = em.createQuery("SELECT DISTINCT c FROM Country c WHERE c.id = :entityId ORDER BY c.id", Country.class);
+        TypedQuery<Country> findByIdQuery = entityManager.createQuery("SELECT DISTINCT c FROM Country c WHERE c.id = :entityId ORDER BY c.id", Country.class);
         findByIdQuery.setParameter("entityId", id);
         Country entity;
         try {
@@ -82,8 +85,9 @@ public class CountryEndpoint {
             entity = null;
         }
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(NOT_FOUND).build();
         }
+
         return Response.ok(entity).build();
     }
 
@@ -91,15 +95,15 @@ public class CountryEndpoint {
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Lists all the countries")
     public List<Country> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult) {
-        TypedQuery<Country> findAllQuery = em.createQuery("SELECT DISTINCT c FROM Country c ORDER BY c.id", Country.class);
+        TypedQuery<Country> findAllQuery = entityManager.createQuery("SELECT DISTINCT c FROM Country c ORDER BY c.id", Country.class);
         if (startPosition != null) {
             findAllQuery.setFirstResult(startPosition);
         }
         if (maxResult != null) {
             findAllQuery.setMaxResults(maxResult);
         }
-        final List<Country> results = findAllQuery.getResultList();
-        return results;
+
+        return findAllQuery.getResultList();
     }
 
     @PUT
@@ -108,11 +112,11 @@ public class CountryEndpoint {
     @ApiOperation("Updates a country")
     public Response update(Country entity) {
         try {
-            entity = em.merge(entity);
+            entity = entityManager.merge(entity);
         } catch (OptimisticLockException e) {
-            return Response.status(Response.Status.CONFLICT).entity(e.getEntity()).build();
+            return Response.status(CONFLICT).entity(e.getEntity()).build();
         }
 
-        return Response.noContent().build();
+        return noContent().build();
     }
 }

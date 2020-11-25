@@ -1,5 +1,7 @@
 package org.agoncal.application.petstore.rest;
 
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,7 +20,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import org.agoncal.application.petstore.model.Category;
@@ -42,7 +43,7 @@ public class CategoryEndpoint {
     // ======================================
 
     @PersistenceContext(unitName = "applicationPetstorePU")
-    private EntityManager em;
+    private EntityManager entityManager;
 
     // ======================================
     // = Business methods =
@@ -52,7 +53,7 @@ public class CategoryEndpoint {
     @Consumes({ "application/xml", "application/json" })
     @ApiOperation("Creates a category")
     public Response create(Category entity) {
-        em.persist(entity);
+        entityManager.persist(entity);
         return Response.created(UriBuilder.fromResource(CategoryEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
     }
 
@@ -60,11 +61,11 @@ public class CategoryEndpoint {
     @Path("/{id:[0-9][0-9]*}")
     @ApiOperation("Deletes a category by id")
     public Response deleteById(@PathParam("id") Long id) {
-        Category entity = em.find(Category.class, id);
+        Category entity = entityManager.find(Category.class, id);
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(NOT_FOUND).build();
         }
-        em.remove(entity);
+        entityManager.remove(entity);
         return Response.noContent().build();
     }
 
@@ -73,7 +74,7 @@ public class CategoryEndpoint {
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Finds a category given an identifier")
     public Response findById(@PathParam("id") Long id) {
-        TypedQuery<Category> findByIdQuery = em.createQuery("SELECT DISTINCT c FROM Category c WHERE c.id = :entityId ORDER BY c.id", Category.class);
+        TypedQuery<Category> findByIdQuery = entityManager.createQuery("SELECT DISTINCT c FROM Category c WHERE c.id = :entityId ORDER BY c.id", Category.class);
         findByIdQuery.setParameter("entityId", id);
         Category entity;
         try {
@@ -82,7 +83,7 @@ public class CategoryEndpoint {
             entity = null;
         }
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(NOT_FOUND).build();
         }
         return Response.ok(entity).build();
     }
@@ -91,15 +92,15 @@ public class CategoryEndpoint {
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Lists all the categories")
     public List<Category> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult) {
-        TypedQuery<Category> findAllQuery = em.createQuery("SELECT DISTINCT c FROM Category c ORDER BY c.id", Category.class);
+        TypedQuery<Category> findAllQuery = entityManager.createQuery("SELECT DISTINCT c FROM Category c ORDER BY c.id", Category.class);
         if (startPosition != null) {
             findAllQuery.setFirstResult(startPosition);
         }
         if (maxResult != null) {
             findAllQuery.setMaxResults(maxResult);
         }
-        final List<Category> results = findAllQuery.getResultList();
-        return results;
+
+        return findAllQuery.getResultList();
     }
 
     @PUT
@@ -108,7 +109,7 @@ public class CategoryEndpoint {
     @ApiOperation("Updates a category")
     public Response update(Category entity) {
         try {
-            entity = em.merge(entity);
+            entity = entityManager.merge(entity);
         } catch (OptimisticLockException e) {
             return Response.status(Response.Status.CONFLICT).entity(e.getEntity()).build();
         }

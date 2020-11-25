@@ -1,9 +1,11 @@
 package org.agoncal.application.petstore.util;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.interceptor.InterceptorBinding;
@@ -13,8 +15,8 @@ import javax.interceptor.InterceptorBinding;
  */
 
 @InterceptorBinding
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE })
+@Retention(RUNTIME)
+@Target({ METHOD, TYPE })
 @Documented
 public @interface Loggable {
 }

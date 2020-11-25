@@ -1,5 +1,12 @@
 package org.agoncal.application.petstore.view.shopping;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.agoncal.application.petstore.model.Item;
 import org.agoncal.application.petstore.model.Product;
 import org.agoncal.application.petstore.service.CatalogService;
@@ -7,16 +14,8 @@ import org.agoncal.application.petstore.util.Loggable;
 import org.agoncal.application.petstore.view.AbstractBean;
 import org.agoncal.application.petstore.view.CatchException;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.util.List;
-
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -27,8 +26,13 @@ import java.util.List;
 public class CatalogBean extends AbstractBean implements Serializable {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     @Inject
     private CatalogService catalogService;
@@ -44,7 +48,7 @@ public class CatalogBean extends AbstractBean implements Serializable {
     private List<Item> items;
 
     // ======================================
-    // =              Public Methods        =
+    // = Public Methods =
     // ======================================
 
     public String doFindProducts() {
@@ -64,8 +68,7 @@ public class CatalogBean extends AbstractBean implements Serializable {
     }
 
     /**
-     * Can also be invoked in a RESTful way :
-     * http://localhost:8080/applicationPetstore/searchresult.xhtml?keyword=tail
+     * Can also be invoked in a RESTful way : http://localhost:8080/applicationPetstore/searchresult.xhtml?keyword=tail
      */
     public String doSearch() {
         items = catalogService.searchItems(keyword);
@@ -75,7 +78,7 @@ public class CatalogBean extends AbstractBean implements Serializable {
     }
 
     // ======================================
-    // =         Getters & setters          =
+    // = Getters & setters =
     // ======================================
 
     public Product getProduct() {

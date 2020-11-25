@@ -23,14 +23,13 @@ public class Country implements Serializable {
     // = Attributes =
     // ======================================
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
     @Version
     @Column(name = "version")
     private int version;

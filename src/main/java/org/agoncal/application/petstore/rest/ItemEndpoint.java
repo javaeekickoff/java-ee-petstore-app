@@ -1,5 +1,12 @@
 package org.agoncal.application.petstore.rest;
 
+import static javax.ws.rs.core.Response.noContent;
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
+import static javax.ws.rs.core.Response.Status.CONFLICT;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.UriBuilder.fromResource;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,8 +25,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 
 import org.agoncal.application.petstore.model.Item;
 import org.agoncal.application.petstore.util.Loggable;
@@ -42,7 +47,7 @@ public class ItemEndpoint {
     // ======================================
 
     @PersistenceContext(unitName = "applicationPetstorePU")
-    private EntityManager em;
+    private EntityManager entityManager;
 
     // ======================================
     // = Business methods =
@@ -52,20 +57,20 @@ public class ItemEndpoint {
     @Consumes({ "application/xml", "application/json" })
     @ApiOperation("Creates a new item")
     public Response create(Item entity) {
-        em.persist(entity);
-        return Response.created(UriBuilder.fromResource(ItemEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
+        entityManager.persist(entity);
+        return Response.created(fromResource(ItemEndpoint.class).path(String.valueOf(entity.getId())).build()).build();
     }
 
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
     @ApiOperation("Deletes an item by its id")
     public Response deleteById(@PathParam("id") Long id) {
-        Item entity = em.find(Item.class, id);
+        Item entity = entityManager.find(Item.class, id);
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return status(NOT_FOUND).build();
         }
-        em.remove(entity);
-        return Response.noContent().build();
+        entityManager.remove(entity);
+        return noContent().build();
     }
 
     @GET
@@ -73,9 +78,10 @@ public class ItemEndpoint {
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Finds an item by its id")
     public Response findById(@PathParam("id") Long id) {
-        TypedQuery<Item> findByIdQuery = em.createQuery("SELECT DISTINCT i FROM Item i LEFT JOIN FETCH i.product WHERE i.id = :entityId ORDER BY i.id",
+        TypedQuery<Item> findByIdQuery = entityManager.createQuery("SELECT DISTINCT i FROM Item i LEFT JOIN FETCH i.product WHERE i.id = :entityId ORDER BY i.id",
                 Item.class);
         findByIdQuery.setParameter("entityId", id);
+
         Item entity;
         try {
             entity = findByIdQuery.getSingleResult();
@@ -83,24 +89,25 @@ public class ItemEndpoint {
             entity = null;
         }
         if (entity == null) {
-            return Response.status(Status.NOT_FOUND).build();
+            return status(NOT_FOUND).build();
         }
-        return Response.ok(entity).build();
+
+        return ok(entity).build();
     }
 
     @GET
     @Produces({ "application/xml", "application/json" })
     @ApiOperation("Lists all items")
     public List<Item> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult) {
-        TypedQuery<Item> findAllQuery = em.createQuery("SELECT DISTINCT i FROM Item i LEFT JOIN FETCH i.product ORDER BY i.id", Item.class);
+        TypedQuery<Item> findAllQuery = entityManager.createQuery("SELECT DISTINCT i FROM Item i LEFT JOIN FETCH i.product ORDER BY i.id", Item.class);
         if (startPosition != null) {
             findAllQuery.setFirstResult(startPosition);
         }
         if (maxResult != null) {
             findAllQuery.setMaxResults(maxResult);
         }
-        final List<Item> results = findAllQuery.getResultList();
-        return results;
+
+        return findAllQuery.getResultList();
     }
 
     @PUT
@@ -109,11 +116,11 @@ public class ItemEndpoint {
     @ApiOperation("Updates an item")
     public Response update(Item entity) {
         try {
-            entity = em.merge(entity);
+            entity = entityManager.merge(entity);
         } catch (OptimisticLockException e) {
-            return Response.status(Response.Status.CONFLICT).entity(e.getEntity()).build();
+            return status(CONFLICT).entity(e.getEntity()).build();
         }
 
-        return Response.noContent().build();
+        return noContent().build();
     }
 }
