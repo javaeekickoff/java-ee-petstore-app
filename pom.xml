@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.agoncal.application</groupId>
     <artifactId>petstoreee7</artifactId>
-    <version>7.0</version>
+    <version>8.0</version>
     <packaging>war</packaging>
-    <name>Petstore application using Java EE 7</name>
+    <name>Petstore application using Java EE 8</name>
 
     <properties>
-        <version.javaee>7.0</version.javaee>
-        <version.jboss-javaee>1.1.0.Final</version.jboss-javaee>
         <version.log4j>2.8.2</version.log4j>
+        
         <!-- Test -->
         <version.junit>4.12</version.junit>
         <version.arquillian>1.1.15.2</version.arquillian>
@@ -23,8 +22,10 @@
         <version.derby>10.10.1.1</version.derby>
         <version.junit>4.12</version.junit>
         <version.equalsverifier>1.7.8</version.equalsverifier>
+        
         <!-- App servers -->
         <version.wildfly>11.0.0.Final</version.wildfly>
+        
         <!-- UI (WebJar, Bootstrap, JQuery...) -->
         <version.bootstrap>3.3.7-1</version.bootstrap>
         <version.jquery>2.2.4</version.jquery>
@@ -33,13 +34,12 @@
         <version.fontawesome>4.7.0</version.fontawesome>
         <!-- Other -->
         <version.swagger>1.5.17</version.swagger>
+        
         <!--Maven Plugins & co -->
-        <version.maven.war.plugin>3.1.0</version.maven.war.plugin>
-        <version.maven.compiler.plugin>3.1</version.maven.compiler.plugin>
-        <version.maven.dependency.plugin>2.10</version.maven.dependency.plugin>
-        <version.maven.surefire.plugin>2.19.1</version.maven.surefire.plugin>
-        <version.maven.failsafe.plugin>2.19.1</version.maven.failsafe.plugin>
-        <version.swagger.plugin>3.1.6</version.swagger.plugin>
+        <version.maven.dependency.plugin>3.1.2</version.maven.dependency.plugin>
+        <version.maven.surefire.plugin>3.0.0-M4</version.maven.surefire.plugin>
+        <version.maven.failsafe.plugin>3.0.0-M4</version.maven.failsafe.plugin>
+        <version.swagger.plugin>3.1.8</version.swagger.plugin>
         
         <!-- Project -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -117,7 +117,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
@@ -193,9 +192,31 @@
     <build>
         <finalName>applicationPetstore</finalName>
         <plugins>
+            <!-- Sets minimal Maven version to 3.5.4 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${version.maven.war.plugin}</version>
+                <version>3.2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
@@ -326,13 +347,12 @@
             </dependencies>
         </profile>
     </profiles>
-
-
-    <repositories>
+    
+     <repositories>
         <repository>
             <id>primefaces</id>
             <url>http://repository.primefaces.org/</url>
         </repository>
     </repositories>
-
+    
 </project>
