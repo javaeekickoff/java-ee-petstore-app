@@ -1,18 +1,17 @@
 package org.agoncal.application.petstore.view;
 
-import org.agoncal.application.petstore.util.Loggable;
+import java.io.Serializable;
+import java.util.Locale;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import java.io.Serializable;
-import java.util.Locale;
+
+import org.agoncal.application.petstore.util.Loggable;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -20,11 +19,15 @@ import java.util.Locale;
 @Loggable
 public class LocaleBean implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     @Produces
     private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
     // ======================================
-    // =          Business methods          =
+    // = Business methods =
     // ======================================
 
     public Locale getLocale() {

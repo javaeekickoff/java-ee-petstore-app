@@ -1,34 +1,33 @@
 package org.agoncal.application.petstore.view;
 
-import org.agoncal.application.petstore.util.Loggable;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+
+import org.agoncal.application.petstore.util.Loggable;
+
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Loggable
 public abstract class AbstractBean {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
     @Inject
     private transient Logger logger;
 
     // ======================================
-    // =          Protected Methods         =
+    // = Protected Methods =
     // ======================================
 
     private String getMessage(FacesContext facesContext, String msgKey, Object... args) {

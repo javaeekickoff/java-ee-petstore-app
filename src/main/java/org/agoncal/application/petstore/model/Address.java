@@ -15,152 +15,132 @@ import javax.validation.constraints.Size;
  */
 
 @Embeddable
-public class Address implements Serializable
-{
+public class Address implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+    // ======================================
+    // = Attributes =
+    // ======================================
 
-   @Column(length = 50, nullable = false)
-   @Size(min = 5, max = 50)
-   @NotNull
-   private String street1;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-   @Column
-   private String street2;
+    @Column(length = 50, nullable = false)
+    @Size(min = 5, max = 50)
+    @NotNull
+    private String street1;
 
-   @Column(length = 50, nullable = false)
-   @Size(min = 2, max = 50)
-   @NotNull
-   private String city;
+    @Column
+    private String street2;
 
-   @Column
-   private String state;
+    @Column(length = 50, nullable = false)
+    @Size(min = 2, max = 50)
+    @NotNull
+    private String city;
 
-   @Column(length = 10, name = "zip_code", nullable = false)
-   @Size(min = 1, max = 10)
-   @NotNull
-   private String zipcode;
+    @Column
+    private String state;
 
-   @ManyToOne(cascade = CascadeType.PERSIST)
-   private Country country = new Country();
+    @Column(length = 10, name = "zip_code", nullable = false)
+    @Size(min = 1, max = 10)
+    @NotNull
+    private String zipcode;
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Country country = new Country();
 
-   public Address()
-   {
-   }
+    // ======================================
+    // = Constructors =
+    // ======================================
 
-   public Address(String street1, String city, String zipcode, Country country)
-   {
-      this.street1 = street1;
-      this.city = city;
-      this.zipcode = zipcode;
-      this.country = country;
-   }
+    public Address() {
+    }
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+    public Address(String street1, String city, String zipcode, Country country) {
+        this.street1 = street1;
+        this.city = city;
+        this.zipcode = zipcode;
+        this.country = country;
+    }
 
-   public String getStreet1()
-   {
-      return street1;
-   }
+    // ======================================
+    // = Getters & setters =
+    // ======================================
 
-   public void setStreet1(String street1)
-   {
-      this.street1 = street1;
-   }
+    public String getStreet1() {
+        return street1;
+    }
 
-   public String getStreet2()
-   {
-      return street2;
-   }
+    public void setStreet1(String street1) {
+        this.street1 = street1;
+    }
 
-   public void setStreet2(String street2)
-   {
-      this.street2 = street2;
-   }
+    public String getStreet2() {
+        return street2;
+    }
 
-   public String getCity()
-   {
-      return city;
-   }
+    public void setStreet2(String street2) {
+        this.street2 = street2;
+    }
 
-   public void setCity(String city)
-   {
-      this.city = city;
-   }
+    public String getCity() {
+        return city;
+    }
 
-   public String getState()
-   {
-      return state;
-   }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-   public void setState(String state)
-   {
-      this.state = state;
-   }
+    public String getState() {
+        return state;
+    }
 
-   public String getZipcode()
-   {
-      return zipcode;
-   }
+    public void setState(String state) {
+        this.state = state;
+    }
 
-   public void setZipcode(String zipcode)
-   {
-      this.zipcode = zipcode;
-   }
+    public String getZipcode() {
+        return zipcode;
+    }
 
-   public Country getCountry()
-   {
-      return this.country;
-   }
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
 
-   public void setCountry(final Country country)
-   {
-      this.country = country;
-   }
+    public Country getCountry() {
+        return this.country;
+    }
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+    public void setCountry(final Country country) {
+        this.country = country;
+    }
 
-   @Override
-   public final boolean equals(Object o)
-   {
-      if (this == o)
-         return true;
-      if (!(o instanceof Address))
-         return false;
-      Address address = (Address) o;
-      return Objects.equals(street1, address.street1) &&
-               Objects.equals(city, address.city) &&
-               Objects.equals(state, address.state) &&
-               Objects.equals(zipcode, address.zipcode) &&
-               Objects.equals(country, address.country);
-   }
+    // ======================================
+    // = Methods hash, equals, toString =
+    // ======================================
 
-   @Override
-   public final int hashCode()
-   {
-      return Objects.hash(street1, city, state, zipcode, country);
-   }
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Address)) {
+            return false;
+        }
+        Address address = (Address) o;
+        return Objects.equals(street1, address.street1) && Objects.equals(city, address.city) && Objects.equals(state, address.state)
+                && Objects.equals(zipcode, address.zipcode) && Objects.equals(country, address.country);
+    }
 
-   @Override
-   public String toString()
-   {
-      return "Address{" +
-               "street1='" + street1 + '\'' +
-               ", street2='" + street2 + '\'' +
-               ", city='" + city + '\'' +
-               ", state='" + state + '\'' +
-               ", zipcode='" + zipcode + '\'' +
-               ", country=" + country +
-               '}';
-   }
+    @Override
+    public final int hashCode() {
+        return Objects.hash(street1, city, state, zipcode, country);
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" + "street1='" + street1 + '\'' + ", street2='" + street2 + '\'' + ", city='" + city + '\'' + ", state='" + state + '\''
+                + ", zipcode='" + zipcode + '\'' + ", country=" + country + '}';
+    }
 }

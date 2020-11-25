@@ -1,25 +1,28 @@
 package org.agoncal.application.petstore.view;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import java.io.Serializable;
-import java.util.logging.Logger;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
- *         This interceptor catches exception and displayes them in a JSF page
+ * @author Antonio Goncalves http://www.antoniogoncalves.org -- This interceptor catches exception and displayes them in
+ * a JSF page
  */
 
 @Interceptor
 @CatchException
 public class ExceptionInterceptor implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     @Inject
     private Logger log;
 

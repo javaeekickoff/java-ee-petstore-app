@@ -1,22 +1,21 @@
 package org.agoncal.application.petstore.service;
 
-import org.agoncal.application.petstore.model.Category;
-import org.agoncal.application.petstore.model.Item;
-import org.agoncal.application.petstore.model.Product;
-import org.agoncal.application.petstore.util.Loggable;
+import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.List;
+
+import org.agoncal.application.petstore.model.Category;
+import org.agoncal.application.petstore.model.Item;
+import org.agoncal.application.petstore.model.Product;
+import org.agoncal.application.petstore.util.Loggable;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Stateless
@@ -24,14 +23,18 @@ import java.util.List;
 public class CatalogService implements Serializable {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     @Inject
     private EntityManager em;
 
     // ======================================
-    // =              Public Methods        =
+    // = Public Methods =
     // ======================================
 
     public Category findCategory(@NotNull Long categoryId) {
@@ -83,8 +86,9 @@ public class CatalogService implements Serializable {
     }
 
     public Product createProduct(@NotNull Product product) {
-        if (product.getCategory() != null && product.getCategory().getId() == null)
+        if (product.getCategory() != null && product.getCategory().getId() == null) {
             em.persist(product.getCategory());
+        }
 
         em.persist(product);
         return product;
@@ -113,8 +117,9 @@ public class CatalogService implements Serializable {
     }
 
     public List<Item> searchItems(String keyword) {
-        if (keyword == null)
+        if (keyword == null) {
             keyword = "";
+        }
 
         TypedQuery<Item> typedQuery = em.createNamedQuery(Item.SEARCH, Item.class);
         typedQuery.setParameter("keyword", "%" + keyword.toUpperCase() + "%");
@@ -129,8 +134,9 @@ public class CatalogService implements Serializable {
     public Item createItem(@NotNull Item item) {
         if (item.getProduct() != null && item.getProduct().getId() == null) {
             em.persist(item.getProduct());
-            if (item.getProduct().getCategory() != null && item.getProduct().getCategory().getId() == null)
+            if (item.getProduct().getCategory() != null && item.getProduct().getCategory().getId() == null) {
                 em.persist(item.getProduct().getCategory());
+            }
         }
 
         em.persist(item);

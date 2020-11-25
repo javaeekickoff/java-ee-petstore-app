@@ -1,20 +1,21 @@
 package org.agoncal.application.petstore.view;
 
-import javax.inject.Qualifier;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.inject.Qualifier;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Qualifier
 @Retention(RUNTIME)
-@Target({FIELD, TYPE, METHOD})
+@Target({ FIELD, TYPE, METHOD })
 public @interface LoggedIn {
 }

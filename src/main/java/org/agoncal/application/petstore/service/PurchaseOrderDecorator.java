@@ -1,15 +1,13 @@
 package org.agoncal.application.petstore.service;
 
-import org.agoncal.application.petstore.service.ComputablePurchaseOrder;
 import javax.decorator.Decorator;
-import javax.inject.Inject;
 import javax.decorator.Delegate;
+import javax.inject.Inject;
 
 @Decorator
-public abstract class PurchaseOrderDecorator implements ComputablePurchaseOrder
-{
+public abstract class PurchaseOrderDecorator implements ComputablePurchaseOrder {
 
-   @Inject
-   @Delegate
-   private ComputablePurchaseOrder delegate;
+    @Inject
+    @Delegate
+    private ComputablePurchaseOrder delegate;
 }

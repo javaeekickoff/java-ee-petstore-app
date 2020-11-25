@@ -1,20 +1,19 @@
 package org.agoncal.application.petstore.util;
 
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
+
 /**
- * @author blep
- *         Date: 16/02/12
- *         Time: 20:56
+ * @author blep Date: 16/02/12 Time: 20:56
  */
 
 public class ConfigPropertyProducer {
 
     // ======================================
-    // =             Attributes             =
+    // = Attributes =
     // ======================================
 
     private static Properties props;
@@ -29,7 +28,7 @@ public class ConfigPropertyProducer {
     }
 
     // ======================================
-    // =          Business methods          =
+    // = Business methods =
     // ======================================
 
     @Produces

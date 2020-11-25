@@ -3,131 +3,125 @@ package org.agoncal.application.petstore.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "order_line")
-public class OrderLine implements Serializable
-{
+public class OrderLine implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+    // ======================================
+    // = Attributes =
+    // ======================================
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id;
-   @Version
-   @Column(name = "version")
-   private int version;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+    @Version
+    @Column(name = "version")
+    private int version;
 
-   @Column(nullable = false)
-   @Min(1)
-   private Integer quantity;
+    @Column(nullable = false)
+    @Min(1)
+    private Integer quantity;
 
-   @ManyToOne(cascade = CascadeType.PERSIST)
-   @JoinColumn(name = "item_fk", nullable = false)
-   private Item item;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "item_fk", nullable = false)
+    private Item item;
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+    // ======================================
+    // = Constructors =
+    // ======================================
 
-   public OrderLine()
-   {
-   }
+    public OrderLine() {
+    }
 
-   public OrderLine(Integer quantity, Item item)
-   {
-      this.quantity = quantity;
-      this.item = item;
-   }
+    public OrderLine(Integer quantity, Item item) {
+        this.quantity = quantity;
+        this.item = item;
+    }
 
-   // ======================================
-   // = Business methods =
-   // ======================================
+    // ======================================
+    // = Business methods =
+    // ======================================
 
-   public Float getSubTotal()
-   {
-      return item.getUnitCost() * quantity;
-   }
+    public Float getSubTotal() {
+        return item.getUnitCost() * quantity;
+    }
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+    // ======================================
+    // = Getters & setters =
+    // ======================================
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    public Long getId() {
+        return this.id;
+    }
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+    public int getVersion() {
+        return this.version;
+    }
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+    public void setVersion(final int version) {
+        this.version = version;
+    }
 
-   public Integer getQuantity()
-   {
-      return quantity;
-   }
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-   public void setQuantity(Integer quantity)
-   {
-      this.quantity = quantity;
-   }
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-   public Item getItem()
-   {
-      return this.item;
-   }
+    public Item getItem() {
+        return this.item;
+    }
 
-   public void setItem(final Item item)
-   {
-      this.item = item;
-   }
+    public void setItem(final Item item) {
+        this.item = item;
+    }
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+    // ======================================
+    // = Methods hash, equals, toString =
+    // ======================================
 
-   @Override
-   public final boolean equals(Object o)
-   {
-      if (this == o)
-         return true;
-      if (!(o instanceof OrderLine))
-         return false;
-      OrderLine orderLine = (OrderLine) o;
-      return Objects.equals(quantity, orderLine.quantity) &&
-               Objects.equals(item, orderLine.item);
-   }
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OrderLine)) {
+            return false;
+        }
+        OrderLine orderLine = (OrderLine) o;
+        return Objects.equals(quantity, orderLine.quantity) && Objects.equals(item, orderLine.item);
+    }
 
-   @Override
-   public final int hashCode()
-   {
-      return Objects.hash(quantity, item);
-   }
+    @Override
+    public final int hashCode() {
+        return Objects.hash(quantity, item);
+    }
 
-   @Override
-   public String toString()
-   {
-      return "OrderLine{" +
-               "id=" + id +
-               ", version=" + version +
-               ", quantity=" + quantity +
-               ", item=" + item +
-               '}';
-   }
+    @Override
+    public String toString() {
+        return "OrderLine{" + "id=" + id + ", version=" + version + ", quantity=" + quantity + ", item=" + item + '}';
+    }
 }

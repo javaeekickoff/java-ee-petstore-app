@@ -14,107 +14,98 @@ import javax.validation.constraints.Size;
  */
 
 @Embeddable
-public class CreditCard implements Serializable
-{
+public class CreditCard implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+    // ======================================
+    // = Attributes =
+    // ======================================
 
-   @Column(length = 30, name = "credit_card_number", nullable = false)
-   @NotNull
-   @Size(min = 1, max = 30)
-   private String creditCardNumber;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-   @Enumerated
-   @Column(name = "credit_card_type")
-   @NotNull
-   private CreditCardType creditCardType;
+    @Column(length = 30, name = "credit_card_number", nullable = false)
+    @NotNull
+    @Size(min = 1, max = 30)
+    private String creditCardNumber;
 
-   @Column(length = 5, name = "credit_card_expiry_date", nullable = false)
-   @NotNull
-   @Size(min = 1, max = 5)
-   private String creditCardExpDate;
+    @Enumerated
+    @Column(name = "credit_card_type")
+    @NotNull
+    private CreditCardType creditCardType;
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+    @Column(length = 5, name = "credit_card_expiry_date", nullable = false)
+    @NotNull
+    @Size(min = 1, max = 5)
+    private String creditCardExpDate;
 
-   public CreditCard()
-   {
-   }
+    // ======================================
+    // = Constructors =
+    // ======================================
 
-   public CreditCard(String creditCardNumber, CreditCardType creditCardType, String creditCardExpDate)
-   {
-      this.creditCardNumber = creditCardNumber;
-      this.creditCardType = creditCardType;
-      this.creditCardExpDate = creditCardExpDate;
-   }
+    public CreditCard() {
+    }
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+    public CreditCard(String creditCardNumber, CreditCardType creditCardType, String creditCardExpDate) {
+        this.creditCardNumber = creditCardNumber;
+        this.creditCardType = creditCardType;
+        this.creditCardExpDate = creditCardExpDate;
+    }
 
-   public String getCreditCardNumber()
-   {
-      return creditCardNumber;
-   }
+    // ======================================
+    // = Getters & setters =
+    // ======================================
 
-   public void setCreditCardNumber(String creditCardNumber)
-   {
-      this.creditCardNumber = creditCardNumber;
-   }
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
 
-   public CreditCardType getCreditCardType()
-   {
-      return creditCardType;
-   }
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
+    }
 
-   public void setCreditCardType(CreditCardType creditCardType)
-   {
-      this.creditCardType = creditCardType;
-   }
+    public CreditCardType getCreditCardType() {
+        return creditCardType;
+    }
 
-   public String getCreditCardExpDate()
-   {
-      return creditCardExpDate;
-   }
+    public void setCreditCardType(CreditCardType creditCardType) {
+        this.creditCardType = creditCardType;
+    }
 
-   public void setCreditCardExpDate(String creditCardExpDate)
-   {
-      this.creditCardExpDate = creditCardExpDate;
-   }
+    public String getCreditCardExpDate() {
+        return creditCardExpDate;
+    }
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+    public void setCreditCardExpDate(String creditCardExpDate) {
+        this.creditCardExpDate = creditCardExpDate;
+    }
 
-   @Override
-   public final boolean equals(Object o)
-   {
-      if (this == o)
-         return true;
-      if (!(o instanceof CreditCard))
-         return false;
-      CreditCard that = (CreditCard) o;
-      return Objects.equals(creditCardNumber, that.creditCardNumber) &&
-               Objects.equals(creditCardType, that.creditCardType) &&
-               Objects.equals(creditCardExpDate, that.creditCardExpDate);
-   }
+    // ======================================
+    // = Methods hash, equals, toString =
+    // ======================================
 
-   @Override
-   public final int hashCode()
-   {
-      return Objects.hash(creditCardNumber, creditCardType, creditCardExpDate);
-   }
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CreditCard)) {
+            return false;
+        }
+        CreditCard that = (CreditCard) o;
+        return Objects.equals(creditCardNumber, that.creditCardNumber) && Objects.equals(creditCardType, that.creditCardType)
+                && Objects.equals(creditCardExpDate, that.creditCardExpDate);
+    }
 
-   @Override
-   public String toString()
-   {
-      return "CreditCard{" +
-               "creditCardNumber='" + creditCardNumber + '\'' +
-               ", creditCardType=" + creditCardType +
-               ", creditCardExpDate='" + creditCardExpDate + '\'' +
-               '}';
-   }
+    @Override
+    public final int hashCode() {
+        return Objects.hash(creditCardNumber, creditCardType, creditCardExpDate);
+    }
+
+    @Override
+    public String toString() {
+        return "CreditCard{" + "creditCardNumber='" + creditCardNumber + '\'' + ", creditCardType=" + creditCardType + ", creditCardExpDate='"
+                + creditCardExpDate + '\'' + '}';
+    }
 }

@@ -2,23 +2,18 @@ package org.agoncal.application.petstore.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @ApplicationPath("/rest")
-public class RestApplication extends Application
-{
-   // ======================================
-   // =          Business methods          =
-   // ======================================
+public class RestApplication extends Application {
+    // ======================================
+    // = Business methods =
+    // ======================================
 
-   // TODO Not sure this is still needed for portability in EE 7
+    // TODO Not sure this is still needed for portability in EE 7
 //   @Override
 //   public Set<Class<?>> getClasses()
 //   {

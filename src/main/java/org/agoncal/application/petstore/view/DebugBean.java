@@ -1,16 +1,15 @@
 package org.agoncal.application.petstore.view;
 
-import org.agoncal.application.petstore.util.Loggable;
-
-import javax.faces.bean.RequestScoped;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+
+import org.agoncal.application.petstore.util.Loggable;
+
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -20,16 +19,15 @@ import java.util.List;
 public class DebugBean extends AbstractBean {
 
     // ======================================
-    // =              Public Methods        =
+    // = Public Methods =
     // ======================================
 
     public List<String> getThreadStack() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         List<String> elements = new ArrayList<>();
         for (StackTraceElement stackTraceElement : stackTraceElements) {
-            elements.add(stackTraceElement.getClassName() + "." +
-                    stackTraceElement.getMethodName() +
-                    "(" + stackTraceElement.getFileName() + ":" + stackTraceElement.getLineNumber() + ")");
+            elements.add(stackTraceElement.getClassName() + "." + stackTraceElement.getMethodName() + "(" + stackTraceElement.getFileName() + ":"
+                    + stackTraceElement.getLineNumber() + ")");
         }
         return elements;
     }
