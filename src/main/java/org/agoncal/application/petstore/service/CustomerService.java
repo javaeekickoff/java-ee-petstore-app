@@ -1,5 +1,7 @@
 package org.agoncal.application.petstore.service;
 
+import static org.agoncal.application.petstore.model.Customer.digestPassword;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +83,13 @@ public class CustomerService extends AbstractService<Customer> implements Serial
     public Customer findCustomer(@NotNull String login, @NotNull String password) {
         TypedQuery<Customer> typedQuery = entityManager.createNamedQuery(Customer.FIND_BY_LOGIN_PASSWORD, Customer.class);
         typedQuery.setParameter("login", login);
-        typedQuery.setParameter("password", password);
+        typedQuery.setParameter("password", digestPassword(password));
 
-        return typedQuery.getSingleResult();
+        try {
+            return typedQuery.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<Customer> findAllCustomers() {

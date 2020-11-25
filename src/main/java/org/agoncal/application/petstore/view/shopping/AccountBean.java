@@ -1,20 +1,31 @@
 package org.agoncal.application.petstore.view.shopping;
 
+import static javax.security.enterprise.AuthenticationStatus.SEND_FAILURE;
+import static javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
+
+import java.io.Serializable;
+
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
+import javax.faces.context.ExternalContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.security.auth.login.LoginException;
+import javax.security.enterprise.AuthenticationStatus;
+import javax.security.enterprise.SecurityContext;
+import javax.security.enterprise.credential.UsernamePasswordCredential;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.agoncal.application.petstore.model.Customer;
+import org.agoncal.application.petstore.security.SimpleCallerPrincipal;
 import org.agoncal.application.petstore.service.CustomerService;
 import org.agoncal.application.petstore.util.Loggable;
 import org.agoncal.application.petstore.view.AbstractBean;
 import org.agoncal.application.petstore.view.CatchException;
 import org.agoncal.application.petstore.view.LoggedIn;
-
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
-import java.io.Serializable;
 
 /**
  * @author Antonio Goncalves
@@ -32,6 +43,8 @@ public class AccountBean extends AbstractBean implements Serializable {
     // =             Attributes             =
     // ======================================
 
+    private static final long serialVersionUID = 1L;
+
     @Inject
     private CustomerService customerService;
 
@@ -46,8 +59,13 @@ public class AccountBean extends AbstractBean implements Serializable {
     private Customer loggedinCustomer;
 
     @Inject
-    @SessionScoped
-    private transient LoginContext loginContext;
+    private SecurityContext securityContext;
+
+    @Inject
+    private ExternalContext externalContext;
+
+    private Customer newCustomer;
+
 
     // ======================================
     // =              Public Methods        =
@@ -58,13 +76,23 @@ public class AccountBean extends AbstractBean implements Serializable {
             addWarningMessage("id_filled");
             return null;
         }
+
         if (credentials.getPassword() == null || "".equals(credentials.getPassword())) {
             addWarningMessage("pwd_filled");
             return null;
         }
 
-// TODO       loginContext.login();
-        loggedinCustomer = customerService.findCustomer(credentials.getLogin());
+        AuthenticationStatus status = securityContext.authenticate((
+            HttpServletRequest) externalContext.getRequest(),
+            (HttpServletResponse) externalContext.getResponse(),
+            withParams()
+                            .credential(new UsernamePasswordCredential(credentials.getLogin(), credentials.getPassword())));
+
+        if (status == SEND_FAILURE) {
+            addErrorMessage("FAIL");
+            return null;
+        }
+
         return "main.faces";
     }
 
@@ -80,31 +108,48 @@ public class AccountBean extends AbstractBean implements Serializable {
         if ("".equals(credentials.getLogin()) || "".equals(credentials.getPassword()) || "".equals(credentials.getPassword2())) {
             addWarningMessage("id_pwd_filled");
             return null;
-        } else if (!credentials.getPassword().equals(credentials.getPassword2())) {
+        }
+
+        if (!credentials.getPassword().equals(credentials.getPassword2())) {
             addWarningMessage("both_pwd_same");
             return null;
         }
 
         // Login and password are ok
-        loggedinCustomer = new Customer();
-        loggedinCustomer.setLogin(credentials.getLogin());
-        loggedinCustomer.setPassword(credentials.getPassword());
+        newCustomer = new Customer();
+        newCustomer.setLogin(credentials.getLogin());
+        newCustomer.setPassword(credentials.getPassword());
 
         return "createaccount.faces";
     }
 
     public String doCreateCustomer() {
-        loggedinCustomer = customerService.createCustomer(loggedinCustomer);
+        customerService.createCustomer(newCustomer);
+
+        securityContext.authenticate((
+                HttpServletRequest) externalContext.getRequest(),
+                (HttpServletResponse) externalContext.getResponse(),
+                withParams()
+                                .credential(new UsernamePasswordCredential(newCustomer.getLogin(), newCustomer.getPassword())));
+
+
         return "main.faces";
     }
 
-
     public String doLogout() {
+        try {
+            ((HttpServletRequest) externalContext.getRequest()).logout();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+
         loggedinCustomer = null;
+
         // Stop conversation
         if (!conversation.isTransient()) {
             conversation.end();
         }
+
         addInformationMessage("been_loggedout");
         return "main.faces";
     }
@@ -116,14 +161,26 @@ public class AccountBean extends AbstractBean implements Serializable {
     }
 
     public boolean isLoggedIn() {
-        return loggedinCustomer != null;
+        return getLoggedinCustomer() != null;
     }
 
     public Customer getLoggedinCustomer() {
+        if (loggedinCustomer == null) {
+            loggedinCustomer = securityContext
+                .getPrincipalsByType(SimpleCallerPrincipal.class).stream()
+                .map(SimpleCallerPrincipal::getCustomer)
+                .findAny().orElse(null);
+        }
+
         return loggedinCustomer;
     }
 
-    public void setLoggedinCustomer(Customer loggedinCustomer) {
-        this.loggedinCustomer = loggedinCustomer;
+    public Customer getNewCustomer() {
+        return newCustomer;
     }
+
+    public void setNewCustomer(Customer newCustomer) {
+        this.newCustomer = newCustomer;
+    }
+
 }

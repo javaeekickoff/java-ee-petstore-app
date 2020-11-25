@@ -54,10 +54,12 @@ public class Customer implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
     @Version
     @Column(name = "version")
     private int version;
@@ -175,12 +177,11 @@ public class Customer implements Serializable {
      * @param plainTextPassword the password to digest and encode
      * @return digested password
      */
-    public String digestPassword(String plainTextPassword) {
+    public static String digestPassword(String plainTextPassword) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(plainTextPassword.getBytes("UTF-8"));
-            byte[] passwordDigest = md.digest();
-            return Base64.getEncoder().encodeToString(passwordDigest);
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(plainTextPassword.getBytes("UTF-8"));
+            return Base64.getEncoder().encodeToString(messageDigest.digest());
         } catch (Exception e) {
             throw new RuntimeException("Exception encoding password", e);
         }

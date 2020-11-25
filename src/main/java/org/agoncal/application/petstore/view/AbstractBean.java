@@ -4,11 +4,9 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
 import org.agoncal.application.petstore.util.Loggable;
 
@@ -22,9 +20,6 @@ public abstract class AbstractBean {
     // ======================================
     // = Attributes =
     // ======================================
-
-    @Inject
-    private transient Logger logger;
 
     // ======================================
     // = Protected Methods =

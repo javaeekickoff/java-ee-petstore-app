@@ -26,28 +26,28 @@
                 <div class="panel-body">
                     <h:panelGrid columns="3">
                         <h:outputText value="#{i18n.customer_login}:"/>
-                        <h:inputText value="#{accountBean.loggedinCustomer.login}" readonly="true"/>
+                        <h:inputText value="#{accountBean.newCustomer.login}" readonly="true"/>
                         <h:outputText value=""/>
 
                         <h:outputText value="*#{i18n.customer_firstName}:"/>
-                        <h:inputText id="firstName" value="#{accountBean.loggedinCustomer.firstName}"/>
+                        <h:inputText id="firstName" value="#{accountBean.newCustomer.firstName}"/>
                         <h:message for="firstName" style="color: red;"/>
 
                         <h:outputText value="*#{i18n.customer_lastName}:"/>
-                        <h:inputText id="lastName" value="#{accountBean.loggedinCustomer.lastName}"/>
+                        <h:inputText id="lastName" value="#{accountBean.newCustomer.lastName}"/>
                         <h:message for="lastName" style="color: red;"/>
 
                         <h:outputText value="#{i18n.customer_email}:"/>
-                        <h:inputText id="email" value="#{accountBean.loggedinCustomer.email}"/>
+                        <h:inputText id="email" value="#{accountBean.newCustomer.email}"/>
                         <h:message for="email" style="color: red;"/>
 
                         <h:outputText value="#{i18n.customer_telephone}:"/>
-                        <h:inputText id="telephone" value="#{accountBean.loggedinCustomer.telephone}"/>
+                        <h:inputText id="telephone" value="#{accountBean.newCustomer.telephone}"/>
                         <h:message for="telephone" style="color: red;"/>
 
                         <h:outputText value="#{i18n.customer_dateOfBirth}:"/>
                         <p:calendar id="dateOfBirth" display="inline" navigator="true" showOn="button" pattern="d/M/yyyy"
-                                    value="#{accountBean.loggedinCustomer.dateOfBirth}"/>
+                                    value="#{accountBean.newCustomer.dateOfBirth}"/>
                         <h:message for="dateOfBirth" style="color: red;"/>
 
                     </h:panelGrid>
@@ -61,27 +61,27 @@
                 <div class="panel-body">
                     <h:panelGrid columns="3">
                         <h:outputText value="*#{i18n.address_street1}:"/>
-                        <h:inputText id="street1" value="#{accountBean.loggedinCustomer.homeAddress.street1}"/>
+                        <h:inputText id="street1" value="#{accountBean.newCustomer.homeAddress.street1}"/>
                         <h:message for="street1" style="color: red;"/>
 
                         <h:outputText value="#{i18n.address_street2}:"/>
-                        <h:inputText id="street2" value="#{accountBean.loggedinCustomer.homeAddress.street2}"/>
+                        <h:inputText id="street2" value="#{accountBean.newCustomer.homeAddress.street2}"/>
                         <h:message for="street2" style="color: red;"/>
 
                         <h:outputText value="*#{i18n.address_city}:"/>
-                        <h:inputText id="city" value="#{accountBean.loggedinCustomer.homeAddress.city}"/>
+                        <h:inputText id="city" value="#{accountBean.newCustomer.homeAddress.city}"/>
                         <h:message for="city" style="color: red;"/>
 
                         <h:outputText value="#{i18n.address_state}:"/>
-                        <h:inputText id="state" value="#{accountBean.loggedinCustomer.homeAddress.state}"/>
+                        <h:inputText id="state" value="#{accountBean.newCustomer.homeAddress.state}"/>
                         <h:message for="state" style="color: red;"/>
 
                         <h:outputText value="*#{i18n.address_zipcode}:"/>
-                        <h:inputText id="zipcode" value="#{accountBean.loggedinCustomer.homeAddress.zipcode}"/>
+                        <h:inputText id="zipcode" value="#{accountBean.newCustomer.homeAddress.zipcode}"/>
                         <h:message for="zipcode" style="color: red;"/>
 
                         <h:outputText value="* #{i18n.address_country}:"/>
-                        <h:selectOneMenu id="country"  converter="#{countryBean.converter}" value="#{accountBean.loggedinCustomer.homeAddress.country}" class="form-control">
+                        <h:selectOneMenu id="country"  converter="#{countryBean.converter}" value="#{accountBean.newCustomer.homeAddress.country}" class="form-control">
                             <f:selectItem/>
                             <f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{countryBean.all}" var="_item"/>
                         </h:selectOneMenu>
