@@ -38,8 +38,11 @@ public class ItemEndpointTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class).addClass(RestApplication.class).addClass(ItemEndpoint.class).addClass(Item.class).addClass(Product.class)
-                .addClass(Category.class).addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
+        return ShrinkWrap.create(WebArchive.class)
+                .addClass(RestApplication.class).addClass(ItemEndpoint.class).addClass(Item.class).addClass(Product.class)
+                .addClass(Category.class)
+                .addAsResource("init_db.sql")
+                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

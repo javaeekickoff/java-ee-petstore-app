@@ -42,6 +42,7 @@ public class CountryEndpointTest {
                          .addClass(RestApplication.class)
                          .addClass(CountryEndpoint.class)
                          .addClass(Country.class)
+                         .addAsResource("init_db.sql")
                          .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                          .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

@@ -14,7 +14,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -34,8 +33,11 @@ public class ProductBeanTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(ProductBean.class).addClass(Product.class).addClass(Category.class)
-                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(JavaArchive.class)
+                         .addClasses(ProductBean.class, Product.class, Category.class)
+                         .addAsResource("init_db.sql")
+                         .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     // ======================================
@@ -44,7 +46,7 @@ public class ProductBeanTest {
 
     @Test
     public void should_be_deployed() {
-        Assert.assertNotNull(productbean);
+        assertNotNull(productbean);
     }
 
     @Test

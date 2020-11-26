@@ -34,7 +34,9 @@ public class ItemServiceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class).addClass(AbstractService.class).addClass(ItemService.class).addClass(Item.class).addClass(Product.class)
-                .addClass(Category.class).addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                .addClass(Category.class)
+                .addAsResource("init_db.sql")
+                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

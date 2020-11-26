@@ -36,9 +36,11 @@ public class OrderLineBeanTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(OrderLineBean.class).addClass(OrderLine.class).addClass(Category.class).addClass(Product.class)
-                .addClass(Item.class).addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(JavaArchive.class)
+                         .addClasses(OrderLineBean.class, OrderLine.class, Category.class, Product.class, Item.class)
+                         .addAsResource("init_db.sql")
+                         .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     // ======================================

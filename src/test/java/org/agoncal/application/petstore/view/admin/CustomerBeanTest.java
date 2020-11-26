@@ -37,8 +37,10 @@ public class CustomerBeanTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(CustomerBean.class).addClass(Customer.class).addClass(Address.class).addClass(Country.class)
-                .addClass(UserRole.class).addClass(ValidationException.class).addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClasses(CustomerBean.class, Customer.class, Address.class, Country.class, UserRole.class, ValidationException.class)
+                .addAsResource("init_db.sql")
+                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

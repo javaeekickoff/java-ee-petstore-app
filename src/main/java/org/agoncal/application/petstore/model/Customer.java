@@ -151,6 +151,8 @@ public class Customer implements Serializable {
             return;
         }
 
+        dateOfBirth = new Date(dateOfBirth.getTime()); // @Past doesn't work on SQLDate
+
         Calendar birth = new GregorianCalendar();
         birth.setTime(dateOfBirth);
         Calendar now = new GregorianCalendar();
@@ -164,6 +166,7 @@ public class Customer implements Serializable {
 
     @PrePersist
     private void digestPassword() {
+        dateOfBirth = new Date(dateOfBirth.getTime()); // @Past doesn't work on SQLDate
         password = digestPassword(password);
     }
 

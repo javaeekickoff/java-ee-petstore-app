@@ -4,48 +4,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.agoncal.application</groupId>
-    <artifactId>petstoreee7</artifactId>
+    <artifactId>petstore-ee8</artifactId>
     <version>8.0</version>
     <packaging>war</packaging>
     <name>Petstore application using Java EE 8</name>
 
     <properties>
-        <version.log4j>2.8.2</version.log4j>
-        
-        <!-- Test -->
-        <version.junit>4.12</version.junit>
-        <version.arquillian>1.1.15.2</version.arquillian>
-        <version.arquillian.wildfly>2.0.2.Final</version.arquillian.wildfly>
-        <version.shrinkwrap>1.2.6</version.shrinkwrap>
-        <version.arquillian.rest>1.0.0.Alpha4</version.arquillian.rest>
-        <version.resteasy>3.1.4.Final</version.resteasy>
-        <version.derby>10.10.1.1</version.derby>
-        <version.junit>4.12</version.junit>
-        <version.equalsverifier>1.7.8</version.equalsverifier>
-        
-        <!-- App servers -->
-        <version.wildfly>11.0.0.Final</version.wildfly>
-        
-        <!-- UI (WebJar, Bootstrap, JQuery...) -->
-        <version.bootstrap>3.3.7-1</version.bootstrap>
-        <version.jquery>2.2.4</version.jquery>
-        <version.primefaces>6.1</version.primefaces>
-        <version.primefaces-themes>1.0.10</version.primefaces-themes>
-        <version.fontawesome>4.7.0</version.fontawesome>
-        <!-- Other -->
-        <version.swagger>1.5.17</version.swagger>
-        
-        <!--Maven Plugins & co -->
-        <version.maven.dependency.plugin>3.1.2</version.maven.dependency.plugin>
-        <version.maven.surefire.plugin>3.0.0-M4</version.maven.surefire.plugin>
-        <version.maven.failsafe.plugin>3.0.0-M4</version.maven.failsafe.plugin>
-        <version.swagger.plugin>3.1.8</version.swagger.plugin>
-        
         <!-- Project -->
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <!-- App servers -->
+        <version.payara>5.2020.6</version.payara>
+        <version.wildfly>21.0.1.Final</version.wildfly>
+        <version.glassfish>5.1.0</version.glassfish> <!-- Doesn't work for all tests because of https://github.com/javaee/hk2/issues/277 -->
+    
+        <!-- Test -->
+        <version.arquillian.wildfly>3.0.1.Final</version.arquillian.wildfly>
+        <version.arquillian.rest>1.0.0.Alpha4</version.arquillian.rest>
+        <version.resteasy>3.1.4.Final</version.resteasy>
     </properties>
 
     <dependencyManagement>
@@ -53,58 +32,9 @@
             <dependency>
                 <groupId>org.arquillian</groupId>
                 <artifactId>arquillian-universe</artifactId>
-                <version>${version.arquillian}</version>
+                <version>1.5.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${version.junit}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${version.log4j}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>bootstrap</artifactId>
-                <version>${version.bootstrap}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>jquery</artifactId>
-                <version>${version.jquery}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.primefaces</groupId>
-                <artifactId>primefaces</artifactId>
-                <version>${version.primefaces}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.primefaces.themes</groupId>
-                <artifactId>all-themes</artifactId>
-                <version>${version.primefaces-themes}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars.bower</groupId>
-                <artifactId>fontawesome</artifactId>
-                <version>${version.fontawesome}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-client</artifactId>
-                <version>${version.resteasy}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>nl.jqno.equalsverifier</groupId>
-                <artifactId>equalsverifier</artifactId>
-                <version>${version.equalsverifier}</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -118,44 +48,54 @@
         </dependency>
 
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${version.swagger}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
+            <version>2.8.2</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
+            <version>3.3.7-1</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
+            <version>2.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
+            <version>6.1</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces.themes</groupId>
             <artifactId>all-themes</artifactId>
+            <version>1.0.10</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>fontawesome</artifactId>
+            <version>4.7.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.17</version>
+        </dependency>
 
         <!-- TEST -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
+            <version>1.7.8</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.arquillian.universe</groupId>
@@ -166,31 +106,28 @@
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-api</artifactId>
-            <version>${version.shrinkwrap}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-rest-client-api</artifactId>
-            <version>${version.arquillian.rest}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.extension</groupId>
-            <artifactId>arquillian-rest-client-impl-3x</artifactId>
-            <version>${version.arquillian.rest}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson-provider</artifactId>
-            <version>${version.resteasy}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>applicationPetstore</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
         <plugins>
             <!-- Sets minimal Maven version to 3.5.4 -->
             <plugin>
@@ -213,7 +150,7 @@
                     </execution>
                 </executions>
             </plugin>
-        
+
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
@@ -221,10 +158,11 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>com.github.kongchen</groupId>
                 <artifactId>swagger-maven-plugin</artifactId>
-                <version>${version.swagger.plugin}</version>
+                <version>3.1.8</version>
                 <configuration>
                     <apiSources>
                         <apiSource>
@@ -261,7 +199,7 @@
                     <dependency>
                         <groupId>io.swagger</groupId>
                         <artifactId>swagger-hibernate-validations</artifactId>
-                        <version>${version.swagger}</version>
+                        <version>1.6.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -269,13 +207,121 @@
     </build>
 
     <profiles>
+
+        <!-- ### Payara ### -->
+
         <profile>
-            <id>arquillian-wildfly-remote</id>
+            <id>payara-ci-managed</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <dependencies>
+                <!-- The actual Arquillian connector -->
+                <dependency>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>arquillian-payara-server-managed</artifactId>
+                    <version>2.3.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>fish.payara.arquillian</groupId>
+                    <artifactId>payara-client-ee8</artifactId>
+                    <version>2.3.1</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
+                                    <markersDirectory>${session.executionRootDirectory}/target/dependency-maven-plugin-markers</markersDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>fish.payara.distributions</groupId>
+                                            <artifactId>payara</artifactId>
+                                            <version>${version.payara}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${session.executionRootDirectory}/target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${version.maven.surefire.plugin}</version>
+                        <configuration>
+                            <environmentVariables>
+                                <GLASSFISH_HOME>${session.executionRootDirectory}/target/payara5</GLASSFISH_HOME>
+                            </environmentVariables>
+                            <systemPropertyVariables>
+                                <arquillian.launch>payara-ci-managed</arquillian.launch>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+
+        <profile>
+            <id>wildfly-remote</id>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                    <version>${version.arquillian.wildfly}</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-client</artifactId>
+                    <version>${version.resteasy}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-rest-client-api</artifactId>
+                    <version>${version.arquillian.rest}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-rest-client-impl-3x</artifactId>
+                    <version>${version.arquillian.rest}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jackson-provider</artifactId>
+                    <version>${version.resteasy}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <systemPropertyVariables>
                                 <arquillian.launch>arquillian-wildfly-remote</arquillian.launch>
@@ -284,24 +330,50 @@
                     </plugin>
                 </plugins>
             </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly.arquillian</groupId>
-                    <artifactId>wildfly-arquillian-container-remote</artifactId>
-                    <version>${version.arquillian.wildfly}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
 
         <profile>
-            <id>arquillian-wildfly-managed</id>
+            <id>wildfly-ci-managed</id>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>3.0.1.Final</version>
+                    <scope>test</scope>
+                </dependency>
+                
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-client</artifactId>
+                    <version>${version.resteasy}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-rest-client-api</artifactId>
+                    <version>${version.arquillian.rest}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-rest-client-impl-3x</artifactId>
+                    <version>${version.arquillian.rest}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jackson-provider</artifactId>
+                    <version>${version.resteasy}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>${version.maven.dependency.plugin}</version>
                         <executions>
                             <execution>
                                 <id>unpack</id>
@@ -327,32 +399,26 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${version.maven.surefire.plugin}</version>
                         <configuration>
                             <skipTests>false</skipTests>
+                            <environmentVariables>
+                                <JBOSS_HOME>${project.build.directory}/wildfly-${version.wildfly}</JBOSS_HOME>
+                            </environmentVariables>
                             <systemPropertyVariables>
-                                <arquillian.launch>arquillian-wildfly-managed</arquillian.launch>
+                                <arquillian.launch>wildfly-ci-managed</arquillian.launch>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly.arquillian</groupId>
-                    <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>${version.arquillian.wildfly}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
-    
-     <repositories>
+
+    <repositories>
         <repository>
             <id>primefaces</id>
             <url>http://repository.primefaces.org/</url>
         </repository>
     </repositories>
-    
+
 </project>

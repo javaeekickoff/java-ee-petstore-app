@@ -31,8 +31,11 @@ public class CountryServiceTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(AbstractService.class).addClass(CountryService.class).addClass(Country.class)
-                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(JavaArchive.class)
+                         .addClass(AbstractService.class).addClass(CountryService.class).addClass(Country.class)
+                         .addAsResource("init_db.sql")
+                         .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     // ======================================

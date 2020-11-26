@@ -50,6 +50,7 @@ public class CustomerEndpointTest {
                          .addClass(Country.class)
                          .addClass(UserRole.class)
                          .addClass(ValidationException.class)
+                         .addAsResource("init_db.sql")
                          .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                          .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

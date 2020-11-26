@@ -42,6 +42,7 @@ public class CategoryEndpointTest {
                          .addClass(RestApplication.class)
                          .addClass(CategoryEndpoint.class)
                          .addClass(Category.class)
+                         .addAsResource("init_db.sql")
                          .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                          .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

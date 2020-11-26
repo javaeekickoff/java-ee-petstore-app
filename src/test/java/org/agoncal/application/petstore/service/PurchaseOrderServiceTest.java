@@ -47,10 +47,13 @@ public class PurchaseOrderServiceTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(AbstractService.class).addClass(PurchaseOrderService.class).addClass(PurchaseOrder.class)
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClass(AbstractService.class).addClass(PurchaseOrderService.class).addClass(PurchaseOrder.class)
                 .addClass(Country.class).addClass(Address.class).addClass(Customer.class).addClass(CreditCard.class).addClass(CreditCardType.class)
                 .addClass(OrderLine.class).addClass(Category.class).addClass(Product.class).addClass(Item.class).addClass(ShoppingCartItem.class)
-                .addClass(UserRole.class).addClass(ValidationException.class).addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                .addClass(UserRole.class).addClass(ValidationException.class)
+                .addAsResource("init_db.sql")
+                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

@@ -35,7 +35,9 @@ public class OrderLineServiceTest {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class).addClass(AbstractService.class).addClass(OrderLineService.class).addClass(OrderLine.class)
-                .addClass(Category.class).addClass(Product.class).addClass(Item.class).addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                .addClass(Category.class).addClass(Product.class).addClass(Item.class)
+                .addAsResource("init_db.sql")
+                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

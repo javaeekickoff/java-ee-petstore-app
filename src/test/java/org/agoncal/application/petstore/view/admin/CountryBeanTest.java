@@ -13,7 +13,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,8 +32,11 @@ public class CountryBeanTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(CountryBean.class).addClass(Country.class)
-                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(JavaArchive.class)
+                         .addClasses(CountryBean.class, Country.class)
+                         .addAsResource("init_db.sql")
+                         .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     // ======================================
@@ -43,7 +45,7 @@ public class CountryBeanTest {
 
     @Test
     public void should_be_deployed() {
-        Assert.assertNotNull(countrybean);
+        assertNotNull(countrybean);
     }
 
     @Test

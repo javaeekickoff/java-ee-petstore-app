@@ -33,8 +33,11 @@ public class CategoryBeanTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(CategoryBean.class).addClass(Category.class)
-                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(JavaArchive.class)
+                         .addClasses(CategoryBean.class, Category.class)
+                         .addAsResource("init_db.sql")
+                         .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     // ======================================

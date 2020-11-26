@@ -28,7 +28,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,10 +48,13 @@ public class PurchaseOrderBeanTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(PurchaseOrderBean.class).addClass(PurchaseOrder.class).addClass(Country.class)
+        return ShrinkWrap.create(JavaArchive.class)
+                .addClasses(PurchaseOrderBean.class, PurchaseOrder.class, Country.class)
                 .addClass(Address.class).addClass(Customer.class).addClass(CreditCard.class).addClass(CreditCardType.class).addClass(OrderLine.class)
                 .addClass(Category.class).addClass(Product.class).addClass(Item.class).addClass(ShoppingCartItem.class).addClass(UserRole.class)
-                .addClass(ValidationException.class).addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+                .addClass(ValidationException.class)
+                .addAsResource("init_db.sql")
+                .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -62,7 +64,7 @@ public class PurchaseOrderBeanTest {
 
     @Test
     public void should_be_deployed() {
-        Assert.assertNotNull(purchaseorderbean);
+        assertNotNull(purchaseorderbean);
     }
 
     @Test

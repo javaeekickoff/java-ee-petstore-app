@@ -37,6 +37,7 @@ public class CustomerServiceTest {
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class).addClass(AbstractService.class).addClass(CustomerService.class).addClass(Customer.class)
                 .addClass(Address.class).addClass(Country.class).addClass(UserRole.class).addClass(ValidationException.class)
+                .addAsResource("init_db.sql")
                 .addAsManifestResource("META-INF/persistence.xml", "persistence.xml").addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
