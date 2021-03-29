@@ -1,6 +1,6 @@
 package org.agoncal.application.petstore.view;
 
-import javax.faces.annotation.FacesConfig;
+import jakarta.faces.annotation.FacesConfig;
 
 @FacesConfig
 public class FacesApplication {

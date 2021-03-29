@@ -1,23 +1,23 @@
 package org.agoncal.application.petstore.view.shopping;
 
-import static javax.security.enterprise.AuthenticationStatus.SEND_FAILURE;
-import static javax.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
+import static jakarta.security.enterprise.AuthenticationStatus.SEND_FAILURE;
+import static jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
-import javax.faces.context.ExternalContext;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.Conversation;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.faces.context.ExternalContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.security.auth.login.LoginException;
-import javax.security.enterprise.AuthenticationStatus;
-import javax.security.enterprise.SecurityContext;
-import javax.security.enterprise.credential.UsernamePasswordCredential;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.security.enterprise.AuthenticationStatus;
+import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.agoncal.application.petstore.model.Customer;
 import org.agoncal.application.petstore.security.SimpleCallerPrincipal;

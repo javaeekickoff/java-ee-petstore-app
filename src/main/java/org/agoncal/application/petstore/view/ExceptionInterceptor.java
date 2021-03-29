@@ -1,16 +1,16 @@
 package org.agoncal.application.petstore.view;
 
-import static javax.faces.application.FacesMessage.SEVERITY_ERROR;
+import static jakarta.faces.application.FacesMessage.SEVERITY_ERROR;
 
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * @author Antonio Goncalves http://www.antoniogoncalves.org -- This interceptor catches exception and displayes them in
@@ -21,10 +21,8 @@ import javax.interceptor.InvocationContext;
 @CatchException
 public class ExceptionInterceptor implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+
     @Inject
     private Logger log;
 

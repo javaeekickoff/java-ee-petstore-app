@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.agoncal.application.petstore.exceptions.ValidationException;
 import org.agoncal.application.petstore.model.Address;

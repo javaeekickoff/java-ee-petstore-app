@@ -3,7 +3,7 @@ package org.agoncal.application.petstore.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.agoncal.application.petstore.model.Country;
 import org.jboss.arquillian.container.test.api.Deployment;

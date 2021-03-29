@@ -3,10 +3,10 @@ package org.agoncal.application.petstore.util;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 /**
  * @author Antonio Goncalves http://www.antoniogoncalves.org -- This interceptor implements Serializable because it's

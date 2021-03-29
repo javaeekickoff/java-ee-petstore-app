@@ -1,7 +1,7 @@
 package org.agoncal.application.petstore.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
 /**
  * @author Antonio Goncalves http://www.antoniogoncalves.org --

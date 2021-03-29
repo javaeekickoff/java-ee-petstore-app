@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.StringWriter;
 
-import javax.inject.Inject;
-import javax.validation.Validator;
+import jakarta.inject.Inject;
+import jakarta.validation.Validator;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 

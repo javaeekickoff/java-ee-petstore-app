@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 /**
  * Utilities for working with Java Server Faces views.

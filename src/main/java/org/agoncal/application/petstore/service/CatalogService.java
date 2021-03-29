@@ -3,11 +3,11 @@ package org.agoncal.application.petstore.service;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.validation.constraints.NotNull;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 
 import org.agoncal.application.petstore.model.Category;
 import org.agoncal.application.petstore.model.Item;

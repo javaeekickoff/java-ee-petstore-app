@@ -3,8 +3,8 @@ package org.agoncal.application.petstore.util;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 
 /**
  * @author blep Date: 16/02/12 Time: 20:56

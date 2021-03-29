@@ -1,6 +1,6 @@
 package org.agoncal.application.petstore.security;
 
-import javax.security.enterprise.CallerPrincipal;
+import jakarta.security.enterprise.CallerPrincipal;
 
 import org.agoncal.application.petstore.model.Customer;
 

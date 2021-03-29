@@ -3,8 +3,8 @@
 
     <persistence-unit name="applicationPetstorePU">
         <properties>
-            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
-            <property name="javax.persistence.sql-load-script-source" value="init_db.sql" />
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create" />
+            <property name="jakarta.persistence.sql-load-script-source" value="init_db.sql" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
         </properties>

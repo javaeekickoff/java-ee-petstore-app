@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.agoncal.application</groupId>
     <artifactId>petstore-ee8</artifactId>
     <version>8.0</version>
     <packaging>war</packaging>
+
     <name>Petstore application using Java EE 8</name>
 
     <properties>
@@ -15,12 +17,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        
+
         <!-- App servers -->
         <version.payara>5.2020.6</version.payara>
         <version.wildfly>21.0.1.Final</version.wildfly>
         <version.glassfish>5.1.0</version.glassfish> <!-- Doesn't work for all tests because of https://github.com/javaee/hk2/issues/277 -->
-    
+
         <!-- Test -->
         <version.arquillian.wildfly>3.0.1.Final</version.arquillian.wildfly>
         <version.arquillian.rest>1.0.0.Alpha4</version.arquillian.rest>
@@ -38,12 +40,11 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>8.0.0</version>
+            <version>9.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -84,6 +85,7 @@
             <version>1.5.17</version>
         </dependency>
 
+
         <!-- TEST -->
         <dependency>
             <groupId>junit</groupId>
@@ -100,8 +102,8 @@
         <dependency>
             <groupId>org.arquillian.universe</groupId>
             <artifactId>arquillian-junit</artifactId>
-            <scope>test</scope>
             <type>pom</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
@@ -110,9 +112,15 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>primefaces</id>
+            <url>http://repository.primefaces.org/</url>
+        </repository>
+    </repositories>
+
     <build>
         <finalName>applicationPetstore</finalName>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -127,7 +135,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        
         <plugins>
             <!-- Sets minimal Maven version to 3.5.4 -->
             <plugin>
@@ -152,13 +159,27 @@
             </plugin>
 
             <plugin>
+                <groupId>org.eclipse.transformer</groupId>
+                <artifactId>org.eclipse.transformer.maven</artifactId>
+                <version>0.3.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>transform</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>com.github.kongchen</groupId>
                 <artifactId>swagger-maven-plugin</artifactId>
@@ -203,6 +224,8 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+
         </plugins>
     </build>
 
@@ -342,7 +365,7 @@
                     <version>3.0.1.Final</version>
                     <scope>test</scope>
                 </dependency>
-                
+
                 <dependency>
                     <groupId>org.jboss.resteasy</groupId>
                     <artifactId>resteasy-client</artifactId>
@@ -413,12 +436,4 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>primefaces</id>
-            <url>http://repository.primefaces.org/</url>
-        </repository>
-    </repositories>
-
 </project>

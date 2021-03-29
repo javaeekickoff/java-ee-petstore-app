@@ -2,8 +2,8 @@ package org.agoncal.application.petstore.model;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.inject.Inject;
-import javax.validation.Validator;
+import jakarta.inject.Inject;
+import jakarta.validation.Validator;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
